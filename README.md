@@ -206,7 +206,7 @@ And let's activate it:
 
 ### Developing a dumy plugin
 
-Let's develop a dumy plugin to show how it works. Let's create a dumy-plugin into the root wp-content/plugins.
+Let's develop a dumy plugin to show how it works, for this we create a dumy-plugin plugin into the root wp-content/plugins.
 
 ```
 mkdir ./wp-content/plugins/dumy-plugin
@@ -243,7 +243,7 @@ And let's activate it:
 
 Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder, not the ones installed by composer. 
 
-So we have our base WordPress development ready.
+So we have our base WordPress development ready, now we are going to create our staging environment on AWS Elastic BeanStalk.
 
 ### Set the Elastic Beanstalk environment variables
 
