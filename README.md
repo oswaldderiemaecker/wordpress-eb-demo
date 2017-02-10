@@ -4,10 +4,17 @@
 
 ### Dependencies managment with composer
 
-You first need to install Wordpress and its plugins using composer like:
+Then install Wordpress and its plugins using composer like:
 
 ```
 composer.phar install
+```
+
+Create the symlinks to enable plugins and themes development:
+
+```
+./vendor/bin/phing wp-symlink-plugins
+./vendor/bin/phing wp-symlink-themes
 ```
 
 Most of the WP plugins can be found on [wordpress packagist](https://wpackagist.org/), add them to your composer.json like:
@@ -73,7 +80,27 @@ define('LOGGED_IN_SALT',   $_SERVER["LOGGED_IN_SALT"]);
 define('NONCE_SALT',       $_SERVER["NONCE_SALT"]);
 ```
 
-Once finished, copy the wp/wp-config.php in the wp-root/ folder.
+Once finished, copy the wp/wp-config.php in the wp-root/ folder, we will need it for our deployment. 
+
+Export the environment variables:
+
+```
+export MYSQL_ADDON_HOST=192.168.99.100
+export MYSQL_ADDON_DB=wordpress
+export MYSQL_ADDON_PASSWORD=password
+export MYSQL_ADDON_USER=root
+export S3_BACKUP_URL=
+export S3_MEDIA_URL=
+export ENVIRONMENT=develop
+export AUTH_KEY=""
+export SECURE_AUTH_KEY=""
+export LOGGED_IN_KEY=""
+export NONCE_KEY=""
+export AUTH_SALT=""
+export SECURE_AUTH_SALT=""
+export LOGGED_IN_SALT=""
+export NONCE_SALT=""
+```
  
 #### Initialize your Database
 
@@ -88,9 +115,18 @@ Complete the information and click **Install WordPress**
 
 Your WordPress is ready to customized.
 
+### Confiure your development environment
+
+```
+./vendor/bin/phing setup-dev
+```
+
 #### Plugin Install
 
-We are going to add the updraftplus plugin to backup our install on S3, for this we add the "wpackagist-plugin/updraftplus" dependency in our composer.json file.
+We are going to add a few plugins. 
+
+Updraftplus to backup our install on S3, for this we add the "wpackagist-plugin/updraftplus" dependency in our composer.json file.
+The w3-total-cache Search Engine and Performance Optimization plugin and wordpress-https to enable SSL certificate for our site.
 
 ```
     "require": {
@@ -100,29 +136,112 @@ We are going to add the updraftplus plugin to backup our install on S3, for this
         "wpackagist-plugin/contact-form-7": "4.6.1",
         "wpackagist-plugin/business-profile": "1.1.1",
         "wpackagist-plugin/updraftplus": "1.12.32",
+        "wpackagist-plugin/w3-total-cache": "0.9.5.1",
+        "wpackagist-plugin/wordpress-https": "3.3.6",
         "robmorgan/phinx": "~0.6.0",
         "wp-cli/wp-cli": "^1.0",
         "phing/phing": "~2.14"
     },
 ```
 
+Edit the build.properties and add our new plugins into the wp.plugins variables.
 
+```
+wp.plugins=business-profile,contact-form-7,updraftplus,w3-total-cache,wordpress-https
+```
 
+Do the same to your build.local.properties.
 
+Run a composer update to install the plugin.
 
+```
+composer.phar update
+```
 
+Activate the plugins:
 
+```
+./vendor/bin/phing wp-plugins-activate
+```
 
+Open in your browser http://192.168.99.100/wp-admin/plugins.php the updraftplus plugin is installed and activated. Note that the password for the admin user is password, we have updated it so we can run automated test.
 
+Notice all the plugin are installed and activated, but wait a minute, we W3 Total Cache that require an update, let's edit our composer.json and bump the version.
 
+Get the latest version at [WordPress Packagist](https://wpackagist.org/search?q=w3-total-cache&type=any&search=)
 
+``` 
+        "wpackagist-plugin/w3-total-cache": "0.9.5.2",
+```
 
+Run composer update and refresh the plugin page, our plugin is up to date!
 
+```
+composer.phar update
+```
 
+If you need to install a Plugin which isn't available on WordPress Packagist or that you have to build a custom plugin, add it into the project root in wp-content, it is symlinked into the WordPress install, so you can develop or make it available to WordPress.
 
+### Themes Install
 
+Now let's install a Themes, we do the same, adding it to our composer.json and run composer update.
 
+```
+"wpackagist-theme/vanilla": "1.3.5"
+```
 
+Update the theme in th build.properties and build.local.properties
+
+```
+wp.theme=vanilla
+```
+
+And let's activate it:
+
+```
+./vendor/bin/phing wp-theme-activate 
+```
+
+### Developing a dumy plugin
+
+Let's develop a dumy plugin to show how it works. Let's create a dumy-plugin into the root wp-content/plugins.
+
+```
+mkdir ./wp-content/plugins/dumy-plugin
+```
+
+And add a dumy-plugin.php file with the following:
+
+```
+<?php
+    /*
+    Plugin Name: dumy-plugin 
+    Plugin URI:
+    Description: A Dumy plugin 
+    Author: John Doe
+    Version: 1.0
+    Author URI: https://www.johndoe-dumy-plugin.com
+    */
+?>
+```
+
+Open your browser to http://192.168.99.100/wp-admin/plugins.php and your plugin is displayed.
+
+Add it to your build.properties and build.local.properties:
+
+```
+wp.plugins=business-profile,contact-form-7,updraftplus,w3-total-cache,wordpress-https,dumy-plugin
+```
+
+And let's activate it:
+
+```
+./vendor/bin/phing wp-plugins-activate
+```
+
+Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder. 
+
+So we have our base WordPress development ready.
 
 ### Set the Elastic Beanstalk environment variables
 
@@ -147,8 +266,6 @@ export AUTH_SALT=""
 export SECURE_AUTH_SALT=""
 export LOGGED_IN_SALT=""
 export NONCE_SALT=""
-export DBI_AWS_ACCESS_KEY_ID=""
-export DBI_AWS_SECRET_ACCESS_KEY=""
 ```
 
 ### Start docker-compose
