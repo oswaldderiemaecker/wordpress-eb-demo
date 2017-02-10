@@ -2,6 +2,18 @@
 
 ## Setting your Development environment
 
+### Introduction
+
+Have you ever been scared on clicking on that WordPress or plugins update button ?
+Have you ever wanted to have a staging environement for the validation of your latest development by your customers and to update the production with one push upon validation ?
+Have you ever wanted to have basic automated test to ensure proper site function before deployments ?
+
+The goal of this project is to have an WordPress environment that let you develop, test, package and deploy an immutable WordPress on different environments like staging and production.
+
+It is based on docker-compose for the local development, [continuousphp](https://continuousphp.com) for building, testing and deploying on Elastic BeanStalk Infrastructure environments.
+
+So let's start! 
+
 ### Dependencies managment with composer
 
 Install Wordpress and plugins using composer like:
