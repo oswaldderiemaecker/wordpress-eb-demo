@@ -4,13 +4,13 @@
 
 ### Dependencies managment with composer
 
-Then install Wordpress and its plugins using composer like:
+Install Wordpress and plugins using composer like:
 
 ```
 composer.phar install
 ```
 
-Create the symlinks to enable plugins and themes development:
+Create the symlinks to enable plugins and themes in development mode:
 
 ```
 ./vendor/bin/phing wp-symlink-plugins
@@ -45,7 +45,7 @@ cp build.local.properties.sample build.local.properties
 ```
 cp wp/wp-config-sample.php wp/wp-config.php 
 ```
-Set the envirnoment variables as:
+Edit the wp/wp-config.php file and set WP configuration variables using $_SERVER environment variables as below, we do this to be able to provision the WP configuration for the differents environments like develop, staging and production.
 
 ```
 /** The name of the database for WordPress */
@@ -80,9 +80,9 @@ define('LOGGED_IN_SALT',   $_SERVER["LOGGED_IN_SALT"]);
 define('NONCE_SALT',       $_SERVER["NONCE_SALT"]);
 ```
 
-Once finished, copy the wp/wp-config.php in the wp-root/ folder, we will need it for our deployment. 
+Once finished, copy the wp/wp-config.php in the wp-root/ folder, we will need it for the deployment provisioning. 
 
-Export the environment variables:
+Let's xport the environment variables for our development environents:
 
 ```
 export MYSQL_ADDON_HOST=192.168.99.100
@@ -104,18 +104,20 @@ export NONCE_SALT=""
  
 #### Initialize your Database
 
+Now let's initialize our WP database.
+
 ```
 ./vendor/bin/phing reset-db
 ```
 
-#### Install WordPress
+#### WordPress Base Install
 
 Open in your browser http://192.168.99.100/wp-admin/install.php to install your WordPress.
 Complete the information and click **Install WordPress**
 
-Your WordPress is ready to customized.
+Your WordPress is now ready to customized.
 
-### Confiure your development environment
+### Configure your development environment
 
 ```
 ./vendor/bin/phing setup-dev
@@ -239,7 +241,7 @@ And let's activate it:
 ./vendor/bin/phing wp-plugins-activate
 ```
 
-Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder. 
+Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder, not the ones installed by composer. 
 
 So we have our base WordPress development ready.
 
