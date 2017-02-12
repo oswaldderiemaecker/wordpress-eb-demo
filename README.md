@@ -631,12 +631,25 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
 4. In the deploy console, you should see **Deployment successfully started**
 5. Login to the AWS console/AWS Elastic BeanStalk to see the details.
 
-You can now modify your code with your favorite editor. For example, edit the file module/Application/view/layout/layout.phtml, add some text, save the file, commit and push it:
+Let's modify our Dumy plugin at ./wp-content/plugins/dumy-plugin/dumy-plugin.php and bump its version to 1.1: 
+
+```
+<?php
+    /*
+    Plugin Name: dumy-plugin
+    Plugin URI:
+    Description: A Dumy plugin
+    Author: John Doe
+    Version: 1.**1**
+    Author URI: https://www.johndoe-dumy-plugin.com
+    */
+?>
+```
 
 ```bash
 git checkout develop
-git add module/Application/view/layout/layout.phtml
-git commit -m "Modifying the layout"
+git add ./wp-content/plugins/dumy-plugin/dumy-plugin.php
+git commit -m "Bumping our Dumy plugin version"
 git push
 ```
 
