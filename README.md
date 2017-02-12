@@ -382,7 +382,7 @@ chmod 400 my-key-pair.pem
 6. For App code, choose Sample application.
 7. Choose Configure more options.
 8. Configuration presets: Low cost (Free Tier eligible)
-9. Select ** Environment settings** and fill in the following:
+9. Select **Environment settings** and fill in the following:
   1. Name: staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following:
