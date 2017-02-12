@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Set-up your Development environment](#set-up-your-development-environment)
+  - [Prepare your WordPress Repository](#prepare-your-wordpress-repository)
   - [Dependencies management with composer](#dependencies-management-with-composer)
   - [Phing environment variables](#phing-environment-variables)
   - [Configuring Wordpress](#configuring-wordpress)
@@ -49,6 +50,36 @@ So let's start!
 * AWS account
 
 ## Set-up your Development environment
+
+### Prepare your WordPress Repository
+
+Fork and Clone the [WordPress Elastic BeanStalk Demo](https://github.com/continuousdemo/wordpress-eb-demo).
+
+Because we are going to configure continuousphp in staging environment, we need to create a develop branch, for which we will create a deployment pipeline.
+
+Create the **develop** branch:
+
+```bash
+git checkout -B develop
+git push origin develop
+```
+
+This application include the following files:
+
+* [composer.json](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/composer.json) with our WordPress dependencies
+* [build.xml](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/build.xml) with the phing targets
+* [build.properties](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/build.properties) with our Phing property file 
+* [scripts](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/scripts/) with our provisioning scripts  
+* [wp-content](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/wp-content/) with our custom WordPress content 
+* [wp-root](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/wp-root/) with our root configuration WordPress content 
+* [.ebextensions/project.config](https://github.com/continuousdemo/wordpress-eb-demo/blob/.ebextensions/project.config) with the Elastic BeanStalk provisioning script. 
+* [Dockerfile](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/Dockerfile) with our Docker file 
+* [docker-compose.yml](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/docker-compose.yml) with docker-compose configuration file 
+* [nginx](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/nginx/) with nginx configuration files 
+* [php](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/php/) with php configuration files 
+* [behat.yml](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/behat.yml) with the Behat configuration
+
+These are key files to set-up your application installation, testing and deployment. Feel free to take a look at them to get a better understanding.
 
 ### Dependencies management with composer
 
