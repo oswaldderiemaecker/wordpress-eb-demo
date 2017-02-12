@@ -1,5 +1,27 @@
 # AWS Elastic Beanstalk Wordpress Deployment
 
+- [Introduction](#introduction)
+- [Set-up your Development environment](#set-up-your-development-environment)
+  - [Dependencies management with composer](#dependencies-management-with-composer)
+  - [Phing environment variables](#phing-environment-variables)
+  - [Configuring Wordpress](#configuring-wordpress)
+  - [Initializing the Database](#initializing-the-database)
+  - [WordPress Base Install](#wordpress-base-install)
+  - [Configuring your development environment](#configuring-your-development-environment)
+  - [Plugin Installation](#plugin-installation)
+  - [Themes Installation](#themes-installation)
+  - [Developing a dumy plugin](#developing-a-dumy-plugin)
+- [AWS Elastic BeanStalk Staging environment](#aws-elastic-beanstalk-staging-environment)
+  - [Set-up the AWS environment accounts](#set-up-the-aws-environment-accounts)
+  - [Set-up the backup S3 bucket](#set-up-the-backup-s3-bucket)
+  - [Deployment pipeline Configuration](#deployment-pipeline-configuration)
+  - [Creating the EC2 Key Pair](#creating-the-ec2-key-pair)
+  - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
+  - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
+  - [Create your Staging Application Environment](#create-your-staging-application-environment)
+- [Deploy the apps](#deploy-the-apps)
+- [Notes](#notes)
+
 ## Introduction
 
 Have you ever been scared on clicking on that WordPress or plugins update button ?
@@ -12,9 +34,9 @@ It is based on docker-compose for the local development, [continuousphp](https:/
 
 So let's start! 
 
-## Setting your Development environment
+## Set-up your Development environment
 
-### Dependencies managment with composer
+### Dependencies management with composer
 
 Install Wordpress and plugins using composer like:
 
@@ -44,7 +66,7 @@ Most of the WP plugins can be found on [wordpress packagist](https://wpackagist.
     },
 ```
 
-### Set the Phing environment variables
+### Phing environment variables
 
 To set your local development environment copy the build.local.properties.sample to build.local.properties.
 
@@ -52,7 +74,7 @@ To set your local development environment copy the build.local.properties.sample
 cp build.local.properties.sample build.local.properties
 ``` 
 
-### Configure Wordpress
+### Configuring Wordpress
 
 ```
 cp wp/wp-config-sample.php wp/wp-config.php 
@@ -114,7 +136,7 @@ export LOGGED_IN_SALT=""
 export NONCE_SALT=""
 ```
  
-#### Initialize your Database
+#### Initializing the Database
 
 Now let's initialize our WP database.
 
@@ -129,13 +151,13 @@ Complete the information and click **Install WordPress**
 
 Your WordPress is now ready to customized.
 
-### Configure your development environment
+### Configuring your development environment
 
 ```
 ./vendor/bin/phing setup-dev
 ```
 
-#### Plugin Install
+#### Plugin Installation
 
 We are going to add a few plugins. 
 
@@ -196,7 +218,7 @@ composer.phar update
 
 If you need to install a Plugin which isn't available on WordPress Packagist or that you have to build a custom plugin, add it into the project root in wp-content, it is symlinked into the WordPress install, so you can develop or make it available to WordPress.
 
-### Themes Install
+### Themes Installation
 
 Now let's install a Themes, we do the same, adding it to our composer.json and run composer update.
 
@@ -272,7 +294,7 @@ So let's start and create an AWS account for your testing environment.
 1. Open [https://aws.amazon.com/](https://aws.amazon.com/), and then choose *Create an AWS Account*.
 2. Follow the online instructions.
 
-### Set-up the package S3 bucket
+### Set-up the backup S3 bucket
 
 Let's first create an S3 bucket for your WP backup.
 
@@ -300,6 +322,28 @@ The private key file is automatically downloaded by your browser. The base file 
 chmod 400 my-key-pair.pem
 ```
 
+### Creating the MySQL DB Instance
+
+1. Sign in to the AWS Management Console and open the Amazon RDS console at https://console.aws.amazon.com/rds/.
+2. In the top right corner of the Amazon RDS console, choose the region in which you want to create the DB instance.
+3. In the navigation pane, choose Instances.
+4. Choose Launch DB Instance. The Launch DB Instance Wizard opens on the Select Engine page.
+5. On the Select Engine page, choose the MySQL icon and then choose Select for the MySQL DB engine for Dev/Test.
+6. On the Specify DB Details page, specify your DB instance information. 
+  * DB Instance Class: db.m1.small
+  * Multi-AZ Deployment: No (We are in staging)
+  * Allocated Storage: 5 GB
+  * Storage Type: Magnetic
+  * DB Instance Identifier: staging-my-wordpress-site-db
+  * Master Username: wordpress_userdb
+  * Master Password: <YOUR_PASSWORD>
+  * VPC: Select the default VPC
+  * Publicly Accessible: No
+  * VPC Security Group(s): Create New Security Group 
+  * Database Name: staging_my_wordpress_site_db
+  * Backup Retention Period: 1
+  * Auto Minor Version Upgrade: Yes
+
 ### Set-up your Elastic BeanStalk Application
 
 **To create a new application**
@@ -309,7 +353,7 @@ chmod 400 my-key-pair.pem
 3. Enter the name of the application: **my-wordpress-site** 
 4. Then click Next.
 
-### Create your Application Environment 
+### Create your Staging Application Environment 
 
 **To launch an environment** 
 
@@ -355,52 +399,5 @@ chmod 400 my-key-pair.pem
   4. Instance security groups select:
   * rds-launch-wizard 
 15. Do not configure the Database settings.
+16. Choose Create environment.
 
-8. Choose Create environment.
-
-### Set the Elastic Beanstalk environment variables
-
-Elastic Beanstalk use exported environment variables, we will have to set these in Elastic Beanstalk Configuration Software Configuration Environment variables.
-The S3_BACKUP_URL and S3_MEDIA_URL are buckets backup files generated by the wordpress UpdraftPlus - Backup/Restore, use them to restore your environment.
-
-To avoid notice configure the environment variables on your development environment.
-
-```
-export MYSQL_ADDON_HOST=192.168.99.100
-export MYSQL_ADDON_DB=wordpress
-export MYSQL_ADDON_PASSWORD=password
-export MYSQL_ADDON_USER=root
-export S3_BACKUP_URL=s3://backup-bucket/db-backup-updraftplus.zip
-export S3_MEDIA_URL=s3://backup-bucket/media-backup-updraftplus.zip
-export ENVIRONMENT=develop
-export AUTH_KEY=""
-export SECURE_AUTH_KEY=""
-export LOGGED_IN_KEY=""
-export NONCE_KEY=""
-export AUTH_SALT=""
-export SECURE_AUTH_SALT=""
-export LOGGED_IN_SALT=""
-export NONCE_SALT=""
-```
-
-### Start docker-compose
-
-```
-docker-compose up
-```
-
-### Setup your wordpress
-
-```
-./vendor/bin/phing setup-dev
-```
-
-Open you browser to http://192.168.99.100
-
-Run phing without any argugments to get the list of all the targets. 
-
-### Running behat test
-
-```
-./vendor/bin/behat -c tests/behat.local.yml
-```
