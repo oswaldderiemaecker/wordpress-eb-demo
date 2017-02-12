@@ -64,7 +64,7 @@ git checkout -B develop
 git push origin develop
 ```
 
-This application include the following files:
+This WordPress Repository include the following files:
 
 * [composer.json](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/composer.json) with our WordPress dependencies
 * [build.xml](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/build.xml) with the phing targets
@@ -79,7 +79,7 @@ This application include the following files:
 * [php](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/php/) with php configuration files 
 * [behat.yml](https://github.com/continuousdemo/wordpress-eb-demo/blob/master/behat.yml) with the Behat configuration
 
-These are key files to set-up your application installation, testing and deployment. Feel free to take a look at them to get a better understanding.
+These are key files to set-up your WordPress installation, development and deployment environement. Feel free to take a look at them to get a better understanding.
 
 ### Dependencies management with composer
 
