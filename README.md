@@ -640,7 +640,7 @@ Let's modify our Dumy plugin at ./wp-content/plugins/dumy-plugin/dumy-plugin.php
     Plugin URI:
     Description: A Dumy plugin
     Author: John Doe
-    Version: 1.**1**
+    Version: 1.1
     Author URI: https://www.johndoe-dumy-plugin.com
     */
 ?>
