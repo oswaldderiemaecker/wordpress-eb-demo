@@ -302,9 +302,9 @@ So we have our base WordPress development ready, now we are going to create our 
 
 AWS recommends the separation of responsibilities, and therefore you should create a separate AWS account for every environment you might require.
 
-This tutorial explains the deployment in a staging environment. 
+This tutorial explains Wordpress deployment in a staging environment. 
 
-So let's start and create an AWS account for your testing environment.
+So let's start and create an AWS account for your staging environment.
 
 **Set up a new account:**
 
