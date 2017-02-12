@@ -21,7 +21,11 @@
   - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
   - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
   - [Create your Staging Application Environment](#create-your-staging-application-environment)
-- [Deploy the apps](#deploy-the-apps)
+  - [Set up the IAM permissions](#set-up-the-iam-permissions)
+- [Set-up continuousphp](#set-up-continuousphp)
+  - [Application Project Set-up in continuousphp](#application-project-set-up-in-continuousphp)
+  - [Deployment pipeline Configuration](#deployment-pipeline-configuration)
+- [Deploying Wordpress](#deploying-wordpress)
 - [Notes](#notes)
 
 ## Introduction
@@ -383,7 +387,7 @@ chmod 400 my-key-pair.pem
 7. Choose Configure more options.
 8. Configuration presets: Low cost (Free Tier eligible)
 9. Select **Environment settings** and fill in the following:
-  1. Name: staging
+  1. Name: Staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following:
   1. Environment properties:
@@ -418,3 +422,168 @@ chmod 400 my-key-pair.pem
 15. Do not configure the Database settings.
 16. Choose Create environment.
 
+## Set up the IAM permissions
+
+Let's create an IAM policy to grant continuousphp the permission to upload the package to your bucket **"staging_my_wordpress-package"** and communicate with Elastic BeanStalk to deploy it.
+
+**Create the User policy**
+
+1. Sign-in to the IAM console at https://console.aws.amazon.com/iam/ with your user that has administrator permissions.
+2. In the navigation pane, choose *Policies*.
+3. In the content pane, choose *Create Policy*.
+4. Next to *Create Your Own Policy*, choose *Select*.
+5. As *Policy Name*, type **eb-deploy-staging**.
+6. As *Policy Document*, paste the following policy.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "autoscaling:*",
+                "cloudformation:*",
+                "ec2:*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Action": [
+                "elasticbeanstalk:*"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:elasticbeanstalk:*::solutionstack/*",
+                "arn:aws:elasticbeanstalk:<AWS-REGION>:<AWS-ACCOUNT-ID>:application/my-wordpress-site",
+                "arn:aws:elasticbeanstalk:<AWS-REGION>:<AWS-ACCOUNT-ID>:applicationversion/my-wordpress-site/*",
+                "arn:aws:elasticbeanstalk:<AWS-REGION>:<AWS-ACCOUNT-ID>:environment/my-wordpress-site/*",
+                "arn:aws:elasticbeanstalk:<AWS-REGION>:<AWS-ACCOUNT-ID>:template/my-wordpress-site/*"
+            ]
+        },
+        {
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::elasticbeanstalk-*/*"
+            ]
+        },
+        {
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteObject",
+                "s3:GetBucketPolicy",
+                "s3:GetObjectAcl",
+                "s3:ListBucket",
+                "s3:PutBucketPolicy",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::elasticbeanstalk-<AWS-REGION>-<AWS-ACCOUNT-ID>",
+                "arn:aws:s3:::elasticbeanstalk-<AWS-REGION>-<AWS-ACCOUNT-ID>/*"
+            ]
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:iam::<AWS-ACCOUNT-ID>:role/aws-elasticbeanstalk-ec2-role"
+            ]
+        },
+        {
+            "Action": [
+                "elasticloadbalancing:DescribeLoadBalancers"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Action": [
+                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:elasticloadbalancing:<AWS-REGION>:<AWS-ACCOUNT-ID>:loadbalancer",
+                "arn:aws:elasticloadbalancing:<AWS-REGION>:<AWS-ACCOUNT-ID>:loadbalancer/*"
+            ]
+        }
+    ]
+}
+```
+
+7\. Choose *Validate Policy* and ensure that no errors display in a red box at the top of the screen. Correct any that are reported.
+
+8\. Choose *Create Policy*.
+
+Now let's create an IAM user with an Access Key and attach the policy we've just created.
+
+**Create a new User and attach the User policy**
+
+1. Sign-in to the Identity and Access Management (IAM) console at https://console.aws.amazon.com/iam/.
+2. In the navigation pane, choose *Users* and then choose *Create New Users*.
+3. Enter the following user: **staging-wordpress-deploy**
+4. Generate an access key for this user at this time by selecting *Generate an access key for each user*.
+5. Save the generated access key in a safe place.
+6. Choose *Create*.
+7. Edit the user, go to *Permission* and Attach the policy **eb-deploy-staging** to our user **staging-wordpress-deploy**.
+
+## Set-up continuousphp
+
+### WordPress Project Set-up in continuousphp
+
+**Set-up our WordPress project in continuousphp**
+
+1. Type in the omnibar the name of the application: **wordpress-eb**
+2. The fork should appear in the Project List (if not please wait a little that projects list update or simply logout/login)
+3. Click on **Setup**
+4. Click on **Setup Repository**
+5. Click on **+** to add a deployment pipeline
+6. Select the **develop** branch
+
+### Deployment pipeline Configuration
+
+**To configure your deployment pipeline**
+
+1. In the Build Settings (Step 1):
+   1. In the **PHP VERSIONS**, select the PHP versions: **5.6** / **7.0**
+   2. Set the Document Root to: wp
+   3. In the **CREDENTIALS**, click on the **+**, add the AWS IAM Credential **deployment.staging** User Access Key and Secret Key we created in step [Set-up the IAM permissions](#set-up-the-iam-permissions)
+      * Name: AWSElasticBeanStalkWordPressDemo
+      * Region: US West (Oregon)
+      * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      * Secret Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   4. Click on **Next** to move to the Test Settings
+2. In the Test Settings (Step 2):
+   1. continuousphp automatically discovers that you have a `behat.yml` and `phpunit.xml` in your repository and creates the testing configuration for you.
+   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **setup**, **wp-behat-admin-update** and **wp-behat-qa-users** 
+   3. Still in the **PHING** section, add the following variables:
+      * MYSQL_ADDON_HOST: 127.0.0.1
+      * MYSQL_ADDON_DB: skeleton
+      * MYSQL_ADDON_USER: root
+      * MYSQL_ADDON_PASSWORD:
+      * SERVER_HOSTNAME: http://localhost/
+      * environment: develop
+   4. Click on **Next** to move to the Package Settings
+3. In the Package Settings (Step 3):
+   1. Select **AWS ElasticBeanstalk**
+   2. Click on **Next** to move to the Deployment Settings
+4. In the Deployment Settings (Step 4):
+   1. Click on **+** on the **DESTINATIONS** panel
+   2. Complete the destination:
+      * Name: staging
+      * Apply to: push
+      * IAM Profile: The profile we created in Step 1.2
+      * Application: my-wordpress-site 
+      * Environment: Staging
+      * S3 Bucket: mycompany-package/testing
+   3. Check the **enable deployment for successful builds** checkbox
