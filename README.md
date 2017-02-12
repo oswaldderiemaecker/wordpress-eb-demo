@@ -1,10 +1,12 @@
 # AWS Elastic Beanstalk Wordpress Deployment
 
 - [Introduction](#introduction)
+- [requirements](#requirements)
 - [Set-up your Development environment](#set-up-your-development-environment)
   - [Dependencies management with composer](#dependencies-management-with-composer)
   - [Phing environment variables](#phing-environment-variables)
   - [Configuring Wordpress](#configuring-wordpress)
+  - [Starting docker-compose](#starting-docker-compose)
   - [Initializing the Database](#initializing-the-database)
   - [WordPress Base Install](#wordpress-base-install)
   - [Configuring your development environment](#configuring-your-development-environment)
@@ -33,6 +35,12 @@ The goal of this project is to have an WordPress environment that let you develo
 It is based on docker-compose for the local development, [continuousphp](https://continuousphp.com) for building, testing and deploying on Elastic BeanStalk Infrastructure environments.
 
 So let's start! 
+
+## Requirements
+
+* docker-compose
+* composer
+* AWS account
 
 ## Set-up your Development environment
 
@@ -116,7 +124,7 @@ define('NONCE_SALT',       $_SERVER["NONCE_SALT"]);
 
 Once finished, copy the wp/wp-config.php in the wp-root/ folder, we will need it for the deployment provisioning. 
 
-Let's xport the environment variables for our development environents:
+Let's export the environment variables for our development environents:
 
 ```
 export MYSQL_ADDON_HOST=192.168.99.100
@@ -135,6 +143,12 @@ export SECURE_AUTH_SALT=""
 export LOGGED_IN_SALT=""
 export NONCE_SALT=""
 ```
+
+### Starting docker-compose
+
+```
+docker-compose up
+``` 
  
 #### Initializing the Database
 
