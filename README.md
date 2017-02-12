@@ -1,8 +1,6 @@
 # AWS Elastic Beanstalk Wordpress Deployment
 
-## Setting your Development environment
-
-### Introduction
+## Introduction
 
 Have you ever been scared on clicking on that WordPress or plugins update button ?
 Have you ever wanted to have a staging environement for the validation of your latest development by your customers and to update the production with one push upon validation ?
@@ -13,6 +11,8 @@ The goal of this project is to have an WordPress environment that let you develo
 It is based on docker-compose for the local development, [continuousphp](https://continuousphp.com) for building, testing and deploying on Elastic BeanStalk Infrastructure environments.
 
 So let's start! 
+
+## Setting your Development environment
 
 ### Dependencies managment with composer
 
@@ -256,6 +256,107 @@ And let's activate it:
 Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder, not the ones installed by composer. 
 
 So we have our base WordPress development ready, now we are going to create our staging environment on AWS Elastic BeanStalk.
+
+## AWS Elastic BeanStalk Staging environment 
+
+### Set-up the AWS environment accounts
+
+AWS recommends the separation of responsibilities, and therefore you should create a separate AWS account for every environment you might require.
+
+This tutorial explains the deployment in a staging environment. 
+
+So let's start and create an AWS account for your testing environment.
+
+**Set up a new account:**
+
+1. Open [https://aws.amazon.com/](https://aws.amazon.com/), and then choose *Create an AWS Account*.
+2. Follow the online instructions.
+
+### Set-up the package S3 bucket
+
+Let's first create an S3 bucket for your WP backup.
+
+**Create a bucket**
+
+1. Sign-in to the AWS Management Console and open the Amazon S3 console at https://console.aws.amazon.com/s3.
+2. Click *Create Bucket*.
+3. In the *Create a Bucket* dialog box, fill in the *Bucket Name*. In this example we will use **"my-wordpress-site-backup"**.
+4. In the *Region* box, select a region from the drop-down list.
+5. Click Create.
+
+When Amazon S3 has successfully created your bucket, the console displays your empty bucket **"my-wordpress-site-backup"** in the Bucket panel.
+
+### Creating the EC2 Key Pair
+
+To create your key pair using the Amazon EC2 console
+
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2. In the navigation pane, under *NETWORK & SECURITY*, choose *Key Pairs*.
+3. Enter a name for the new key pair in the Key pair name field of the *Create Key Pair* dialog box, and then choose *Create*.
+The private key file is automatically downloaded by your browser. The base file name is the name you specified as the name of your key pair, and the file name extension is *.pem*. Save the private key file in a safe place.
+4. If you will use an SSH client on a Mac or Linux computer to connect to your Linux instance, use the following command to set the permissions of your private key file so that only you can read it :
+
+```bash
+chmod 400 my-key-pair.pem
+```
+
+### Set-up your Elastic BeanStalk Application
+
+**To create a new application**
+
+1. Open the Elastic Beanstalk console.
+2. Choose Create New Application.
+3. Enter the name of the application: **my-wordpress-site** 
+4. Then click Next.
+
+### Create your Application Environment 
+
+**To launch an environment** 
+
+1. Open the Elastic Beanstalk console.
+2. Choose our application: **my-wordpress-site**
+3. In the upper right corner, choose Create New Environment from the Actions menu.
+4. Choose **Web server** environment types.
+5. For Platform: PHP
+6. For App code, choose Sample application.
+7. Choose Configure more options.
+8. Configuration presets: Low cost (Free Tier eligible)
+9. Select ** Environment settings** and fill in the following:
+  1. Name: staging
+  2. Domain: my-wordpress-site
+10. Select **Software settings** and fill in the following:
+  1. Environment properties:
+  * ENVIRONMENT: staging
+  * AUTH_KEY:
+  * AUTH_KEY:
+  * LOGGED_IN_KEY:
+  * LOGGED_IN_SALT:
+  * NONCE_KEY:
+  * NONCE_SALT:
+  * SECURE_AUTH_KEY:
+  * SECURE_AUTH_SALT:
+  * MYSQL_ADDON_DB: staging-my-wordpress-site-db
+  * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.<REGION>.rds.amazonaws.com
+  * MYSQL_ADDON_USER: my-wordpress-site-user-db
+  * MYSQL_ADDON_PASSWORD: <YOUR_DB_PASSWORD>
+  * S3_BACKUP_URL:
+  * S3_MEDIA_URL:
+11. Select **Instances** and fill in the following:
+  1. Root volume type: General Purpose (SSD)
+  2. Size: 10 GB
+12. Select **Security** 
+  1. EC2 key pair: <YOUR_KEY_PAIR>
+13. Select **Notifications**
+  1. Email: <YOUR_EMAIL>
+14. Select **Network**
+  1. Select your default VPC in the Virtual private cloud (VPC)
+  2. Check the Public IP address
+  3. Select all the Instance subnets
+  4. Instance security groups select:
+  * rds-launch-wizard 
+15. Do not configure the Database settings.
+
+8. Choose Create environment.
 
 ### Set the Elastic Beanstalk environment variables
 
