@@ -620,3 +620,30 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * Environment: Staging
       * S3 Bucket: Sign-in to the AWS Management Console and open the Amazon S3 console at https://console.aws.amazon.com/s3, look for a bucket called elasticbeanstalk-<AWS-REGION>-<AWS-ACCOUNT-ID> and add /package 
    3. Check the **enable deployment for successful builds** checkbox
+
+## Deploying WordPress
+
+**Deploying WordPress  with continuousphp**
+
+1. Click on the **Play** button on the top right of the project
+2. Select the **develop** branch
+3. The build is started. It will create the testing and dist package, then run the tests (Behat) for the choosen PHP versions, and finally it deploys the WordPress on Elastic BeanStalk Staging environment.
+4. In the deploy console, you should see **Deployment successfully started**
+5. Login to the AWS console/AWS Elastic BeanStalk to see the details.
+
+You can now modify your code with your favorite editor. For example, edit the file module/Application/view/layout/layout.phtml, add some text, save the file, commit and push it:
+
+```bash
+git checkout develop
+git add module/Application/view/layout/layout.phtml
+git commit -m "Modifying the layout"
+git push
+```
+
+Now, everytime you push to the develop branch, your develop pipeline is triggered and continuousphp builds, tests and deploys your WordPress upon a successful build.
+
+## Notes
+
+* The Configuration used in this tutorial is an example and should not be used for production use as is.
+
+If you like to know more about production configuration or have questions about this tutorial, do not hesitate to contact us using the chat button!
