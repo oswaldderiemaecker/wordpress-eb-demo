@@ -13,7 +13,7 @@
   - [Plugin Installation](#plugin-installation)
   - [Themes Installation](#themes-installation)
   - [Developing a dumy plugin](#developing-a-dumy-plugin)
-- [AWS Elastic BeanStalk Staging environment](#aws-elastic-beanstalk-staging-environment)
+- [Set-up AWS Elastic BeanStalk Staging environment](#set-up-aws-elastic-beanstalk-staging-environment)
   - [Set-up the AWS environment accounts](#set-up-the-aws-environment-accounts)
   - [Set-up the backup S3 bucket](#set-up-the-backup-s3-bucket)
   - [Deployment pipeline Configuration](#deployment-pipeline-configuration)
@@ -31,7 +31,9 @@
 ## Introduction
 
 Have you ever been scared on clicking on that WordPress or plugins update button ?
+
 Have you ever wanted to have a staging environement for the validation of your latest development by your customers and to update the production with one push upon validation ?
+
 Have you ever wanted to have automated test to ensure proper site function before deployments ?
 
 The goal of this project is to have an WordPress environment that let you develop, test, package and deploy an immutable WordPress on different environments like staging and production.
@@ -300,7 +302,7 @@ Same apply to the theme development. Be sure to only commit your themes and plug
 
 So we have our base WordPress development ready, now we are going to create our staging environment on AWS Elastic BeanStalk.
 
-## AWS Elastic BeanStalk Staging environment 
+## Set-up AWS Elastic BeanStalk Staging environment 
 
 ### Set-up the AWS environment accounts
 
