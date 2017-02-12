@@ -336,7 +336,7 @@ chmod 400 my-key-pair.pem
   * Storage Type: Magnetic
   * DB Instance Identifier: staging-my-wordpress-site-db
   * Master Username: wordpress_userdb
-  * Master Password: <YOUR_PASSWORD>
+  * Master Password: \<YOUR_PASSWORD\>
   * VPC: Select the default VPC
   * Publicly Accessible: No
   * VPC Security Group(s): Create New Security Group 
