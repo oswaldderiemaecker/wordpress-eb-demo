@@ -1,7 +1,7 @@
 # AWS Elastic Beanstalk Wordpress Deployment
 
 - [Introduction](#introduction)
-- [requirements](#requirements)
+- [Requirements](#requirements)
 - [Set-up your Development environment](#set-up-your-development-environment)
   - [Dependencies management with composer](#dependencies-management-with-composer)
   - [Phing environment variables](#phing-environment-variables)
@@ -32,7 +32,7 @@ Have you ever wanted to have automated test to ensure proper site function befor
 
 The goal of this project is to have an WordPress environment that let you develop, test, package and deploy an immutable WordPress on different environments like staging and production.
 
-It is based on docker-compose for the local development, [continuousphp](https://continuousphp.com) for building, testing and deploying on Elastic BeanStalk Infrastructure environments.
+It is based on docker-compose for the local development, [continuousphp](https://continuousphp.com) for building, testing and deploying on AWS Elastic BeanStalk Infrastructure environments.
 
 So let's start! 
 
@@ -175,8 +175,11 @@ Your WordPress is now ready to customized.
 
 We are going to add a few plugins. 
 
-Updraftplus to backup our install on S3, for this we add the "wpackagist-plugin/updraftplus" dependency in our composer.json file.
-The w3-total-cache Search Engine and Performance Optimization plugin and wordpress-https to enable SSL certificate for our site.
+* Updraftplus to backup our wordpress assets on S3. 
+* The w3-total-cache Search Engine and Performance Optimization plugin
+* The wordpress-https to enable SSL certificate for our site.
+
+For this we add the "wpackagist-plugin/updraftplus", "wpackagist-plugin/w3-total-cache" and "wpackagist-plugin/wordpress-https" dependencies in our composer.json file like:
 
 ```
     "require": {
@@ -194,7 +197,7 @@ The w3-total-cache Search Engine and Performance Optimization plugin and wordpre
     },
 ```
 
-Edit the build.properties and add our new plugins into the wp.plugins variables.
+Edit the build.properties and add our new plugins into the wp.plugins variables, this varibales is used by the Phing target wp-plugins-activate.
 
 ```
 wp.plugins=business-profile,contact-form-7,updraftplus,w3-total-cache,wordpress-https
@@ -214,7 +217,7 @@ Activate the plugins:
 ./vendor/bin/phing wp-plugins-activate
 ```
 
-Open in your browser http://192.168.99.100/wp-admin/plugins.php the updraftplus plugin is installed and activated. Note that the password for the admin user is password, we have updated it so we can run automated test.
+Open in your browser http://192.168.99.100/wp-admin/plugins.php the updraftplus plugin is installed and activated. Note that the password for the **admin** user is **password**, we have updated it so we can run automated test.
 
 Notice all the plugin are installed and activated, but wait a minute, we W3 Total Cache that require an update, let's edit our composer.json and bump the version.
 
@@ -230,7 +233,7 @@ Run composer update and refresh the plugin page, our plugin is up to date!
 composer.phar update
 ```
 
-If you need to install a Plugin which isn't available on WordPress Packagist or that you have to build a custom plugin, add it into the project root in wp-content, it is symlinked into the WordPress install, so you can develop or make it available to WordPress.
+If you need to install a Plugin which isn't available on WordPress Packagist or that you have to build a custom plugin, add it into the project root in wp-content folder, it is symlinked into the WordPress install, so you can develop or make it available to WordPress.
 
 ### Themes Installation
 
