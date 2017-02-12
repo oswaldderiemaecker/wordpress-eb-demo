@@ -618,7 +618,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * IAM Profile: The profile we created in Step 1.2
       * Application: my-wordpress-site 
       * Environment: Staging
-      * S3 Bucket: Sign-in to the AWS Management Console and open the Amazon S3 console at https://console.aws.amazon.com/s3, look for a bucket called elasticbeanstalk-<AWS-REGION>-<AWS-ACCOUNT-ID> and add /package 
+      * S3 Bucket: Sign-in to the AWS Management Console and open the Amazon S3 console at https://console.aws.amazon.com/s3, look for a bucket called elasticbeanstalk-\<AWS-REGION\>-\<AWS-ACCOUNT-ID\> and add /package 
    3. Check the **enable deployment for successful builds** checkbox
 
 ## Deploying WordPress
