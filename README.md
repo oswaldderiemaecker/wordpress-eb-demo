@@ -380,18 +380,18 @@ chmod 400 my-key-pair.pem
   * SECURE_AUTH_KEY:
   * SECURE_AUTH_SALT:
   * MYSQL_ADDON_DB: staging-my-wordpress-site-db
-  * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.<REGION>.rds.amazonaws.com
+  * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
   * MYSQL_ADDON_USER: my-wordpress-site-user-db
-  * MYSQL_ADDON_PASSWORD: <YOUR_DB_PASSWORD>
+  * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
   * S3_BACKUP_URL:
   * S3_MEDIA_URL:
 11. Select **Instances** and fill in the following:
   1. Root volume type: General Purpose (SSD)
   2. Size: 10 GB
 12. Select **Security** 
-  1. EC2 key pair: <YOUR_KEY_PAIR>
+  1. EC2 key pair: \<YOUR_KEY_PAIR\>
 13. Select **Notifications**
-  1. Email: <YOUR_EMAIL>
+  1. Email: \<YOUR_EMAIL\>
 14. Select **Network**
   1. Select your default VPC in the Virtual private cloud (VPC)
   2. Check the Public IP address
