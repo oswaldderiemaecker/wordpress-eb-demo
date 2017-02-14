@@ -89,6 +89,16 @@ Install Wordpress and plugins using composer like:
 composer.phar install
 ```
 
+### Phing environment variables
+
+To set your local development environment copy the build.local.properties.sample to build.local.properties.
+
+```
+cp build.local.properties.sample build.local.properties
+``` 
+
+### Create the develop symlinks
+
 Create the symlinks to enable plugins and themes in development mode:
 
 ```
@@ -110,14 +120,6 @@ Most of the WP plugins can be found on [wordpress packagist](https://wpackagist.
         "phing/phing": "~2.14"
     },
 ```
-
-### Phing environment variables
-
-To set your local development environment copy the build.local.properties.sample to build.local.properties.
-
-```
-cp build.local.properties.sample build.local.properties
-``` 
 
 ### Configuring Wordpress
 
@@ -198,7 +200,13 @@ Now let's initialize our WP database.
 #### WordPress Base Install
 
 Open in your browser http://192.168.99.100/wp-admin/install.php to install your WordPress.
-Complete the information and click **Install WordPress**
+
+Complete the information: 
+
+* Site Title: Your site title
+* Username: **admin**
+* Search Engine Visibility: Check discourage search engines from indexing this site
+* Click **Install WordPress**
 
 Your WordPress is now ready to customized.
 
@@ -207,6 +215,8 @@ Your WordPress is now ready to customized.
 ```
 ./vendor/bin/phing setup-dev
 ```
+
+Note: don't worry about the wp-get-s3-backup and wp-get-s3-media target that fail, we will use them later on.
 
 #### Plugin Installation
 
@@ -298,6 +308,7 @@ Let's develop a dumy plugin to show how it works, for this we create a dumy-plug
 
 ```
 mkdir ./wp-content/plugins/dumy-plugin
+cd ./wp-content/plugins/dumy-plugin
 ```
 
 And add a dumy-plugin.php file with the following:
