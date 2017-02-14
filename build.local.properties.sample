@@ -11,8 +11,8 @@ db_password=password
 s3_backup_url=s3://backup-bucket/db-backup-updraftplus.zip
 s3_media_url=s3://backup-bucket/media-backup-updraftplus.zip
 
-wp.theme=vanilla
-wp.plugins=business-profile,contact-form-7,updraftplus,w3-total-cache,wordpress-https,dumy-plugin
+wp.theme=twentyeleven
+wp.plugins=business-profile,contact-form-7
 
 # Behat configuration
 # -------------------
