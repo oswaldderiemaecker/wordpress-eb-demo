@@ -763,7 +763,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
    5. Click on **Next** to move to the Test Settings
 2. In the Test Settings (Step 2):
    1. continuousphp automatically discovers that you have a `behat.yml` and `phpunit.xml` in your repository and creates the testing configuration for you.
-   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **reset-db**, **setup-dev**, **wp-behat-admin-update** and **wp-behat-qa-users** 
+   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **reset-db**, **setup-dev** and **wp-behat-admin-update** 
    3. Still in the **PHING** section, add the following variables:
       * MYSQL_ADDON_HOST: 127.0.0.1
       * MYSQL_ADDON_DB: wordpress
