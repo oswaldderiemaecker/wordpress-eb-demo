@@ -363,7 +363,7 @@ So let's start and create an AWS account for your staging environment.
 
 Let's first create an S3 bucket for your WP backup.
 
-**Create a bucket**
+**Create the backup bucket**
 
 1. Sign-in to the AWS Management Console and open the Amazon S3 console at https://console.aws.amazon.com/s3.
 2. Click *Create Bucket*.
@@ -416,7 +416,7 @@ chmod 400 my-key-pair.pem
 1. Open the Elastic Beanstalk console.
 2. Choose Create New Application.
 3. Enter the name of the application: **my-wordpress-site** 
-4. Then click Next.
+4. Then click Create.
 
 ### Create your Staging Application Environment 
 
@@ -429,7 +429,7 @@ chmod 400 my-key-pair.pem
 5. For Platform: PHP
 6. For App code, choose Sample application.
 7. Choose Configure more options.
-8. Configuration presets: Low cost (Free Tier eligible)
+8. Configuration presets: Custom configuration 
 9. Select **Environment settings** and fill in the following:
   1. Name: Staging
   2. Domain: my-wordpress-site
@@ -437,16 +437,16 @@ chmod 400 my-key-pair.pem
   1. Environment properties:
   * ENVIRONMENT: staging
   * AUTH_KEY:
-  * AUTH_KEY:
+  * AUTH_SALT:
   * LOGGED_IN_KEY:
   * LOGGED_IN_SALT:
   * NONCE_KEY:
   * NONCE_SALT:
   * SECURE_AUTH_KEY:
   * SECURE_AUTH_SALT:
-  * MYSQL_ADDON_DB: staging-my-wordpress-site-db
+  * MYSQL_ADDON_DB: staging_my_wordpress_site_db 
   * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
-  * MYSQL_ADDON_USER: my-wordpress-site-user-db
+  * MYSQL_ADDON_USER: wordpress_userdb
   * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
   * S3_BACKUP_URL:
   * S3_MEDIA_URL:
@@ -468,7 +468,7 @@ chmod 400 my-key-pair.pem
 
 ## Set up the IAM permissions
 
-Let's create an IAM policy to grant continuousphp the permission to upload the package to your bucket **"staging_my_wordpress-package"** and communicate with Elastic BeanStalk to deploy it.
+Let's create an IAM policy to grant continuousphp the permission to upload the package to your Elastic BeanStalk bucket and communicate with Elastic BeanStalk to deploy it.
 
 **Create the User policy**
 
@@ -576,10 +576,12 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
 1. Sign-in to the Identity and Access Management (IAM) console at https://console.aws.amazon.com/iam/.
 2. In the navigation pane, choose *Users* and then choose *Create New Users*.
 3. Enter the following user: **staging-wordpress-deploy**
-4. Generate an access key for this user at this time by selecting *Generate an access key for each user*.
-5. Save the generated access key in a safe place.
-6. Choose *Create*.
-7. Edit the user, go to *Permission* and Attach the policy **eb-deploy-staging** to our user **staging-wordpress-deploy**.
+4. Select **Programmatic access** then click Next
+5. Select **Attach existing policies directly**
+6. Search for the policy we just made: **eb-deploy-staging**
+7. Click Next the Create User 
+8. Save the generated access key in a safe place.
+9. Choose *Close*.
 
 ## Set-up continuousphp
 
