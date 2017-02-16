@@ -17,7 +17,8 @@
 - [Set-up AWS Elastic BeanStalk Staging environment](#set-up-aws-elastic-beanstalk-staging-environment)
   - [Set-up the AWS environment accounts](#set-up-the-aws-environment-accounts)
   - [Set-up the backup S3 bucket](#set-up-the-backup-s3-bucket)
-  - [Deployment pipeline Configuration](#deployment-pipeline-configuration)
+  - [Set-up the backup S3 bucket IAM policy](#set-up-the-backup-s3-bucket-iam-policy)
+  - [Configuring the UpdraftPlus WordPress plugin](#configuring-the-updraftplus-wordpress-plugin)
   - [Creating the EC2 Key Pair](#creating-the-ec2-key-pair)
   - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
   - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
@@ -341,21 +342,6 @@ And let's activate it:
 ```
 
 Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder, not the ones installed by composer. 
-
-### Configuring UpdraftPlus Backup
-
-Open your browser to http://192.168.99.100/wp-admin/plugins.php
-
-1. Open the settings page of the UpdraftPlus plugin
-2. Go on the Settings Tab and configure the Backup settings:
-  * File Backup schedule: Daily and retain this many scheduled backups: 15 Days
-  * Database backup schedule: Daily and retain this many scheduled backups: 15 Days
-  * Remote storage: Amazon S3
-  * S3 access key:
-  * S3 secret key:
-  * S3 location:
- 
-
 
 So we have our base WordPress development ready, now we are going to create our staging environment on AWS Elastic BeanStalk.
 
@@ -739,11 +725,16 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
    1. In the **PHP VERSIONS**, select the PHP versions: **5.6** / **7.0**
    2. Set the Document Root to: wp
    3. In the **CREDENTIALS**, click on the **+**, add the AWS IAM Credential **deployment.staging** User Access Key and Secret Key we created in step [Set-up the IAM permissions](#set-up-the-iam-permissions)
-      * Name: AWSElasticBeanStalkWordPressDemo
+      * Name: deployment.staging
       * Region: US West (Oregon)
       * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       * Secret Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   4. Click on **Next** to move to the Test Settings
+   4. Still in the **CREDENTIALS**, click on the **+**, add the AWS IAM Credential **my-wordpress-site-backup** User Access Key and Secret Key we created in step [Set-up the IAM permissions](#set-up-the-iam-permissions)
+      * Name: my-wordpress-site-backup
+      * Region: US West (Oregon)
+      * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      * Secret Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+   5. Click on **Next** to move to the Test Settings
 2. In the Test Settings (Step 2):
    1. continuousphp automatically discovers that you have a `behat.yml` and `phpunit.xml` in your repository and creates the testing configuration for you.
    2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **setup**, **wp-behat-admin-update** and **wp-behat-qa-users** 

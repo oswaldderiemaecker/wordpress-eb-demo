@@ -21,4 +21,3 @@ license.txt
 readme.html
 wp/
 data/*.sql
-behat.local.yml
