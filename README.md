@@ -342,6 +342,21 @@ And let's activate it:
 
 Same apply to the theme development. Be sure to only commit your themes and plugins of the root wp-content folder, not the ones installed by composer. 
 
+### Configuring UpdraftPlus Backup
+
+Open your browser to http://192.168.99.100/wp-admin/plugins.php
+
+1. Open the settings page of the UpdraftPlus plugin
+2. Go on the Settings Tab and configure the Backup settings:
+  * File Backup schedule: Daily and retain this many scheduled backups: 15 Days
+  * Database backup schedule: Daily and retain this many scheduled backups: 15 Days
+  * Remote storage: Amazon S3
+  * S3 access key:
+  * S3 secret key:
+  * S3 location:
+ 
+
+
 So we have our base WordPress development ready, now we are going to create our staging environment on AWS Elastic BeanStalk.
 
 ## Set-up AWS Elastic BeanStalk Staging environment 
@@ -372,6 +387,126 @@ Let's first create an S3 bucket for your WP backup.
 5. Click Create.
 
 When Amazon S3 has successfully created your bucket, the console displays your empty bucket **"my-wordpress-site-backup"** in the Bucket panel.
+
+### Set-up the backup S3 bucket IAM policy
+
+Let's create an IAM policy to grant UpdraftPlus plugin the permission to upload the backups to your backup S3 bucket. 
+
+**Create the policy**
+
+1. Sign-in to the IAM console at https://console.aws.amazon.com/iam/ with your user that has administrator permissions.
+2. In the navigation pane, choose *Policies*.
+3. In the content pane, choose *Create Policy*.
+4. Next to *Create Your Own Policy*, choose *Select*.
+5. As *Policy Name*, type **my-wordpress-site-backup**.
+6. As *Policy Document*, paste the following policy.
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketLocation",
+                "s3:ListBucketMultipartUploads"
+            ],
+            "Resource": "arn:aws:s3:::my-wordpress-site-backup",
+            "Condition": {}
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:AbortMultipartUpload",
+                "s3:DeleteObject",
+                "s3:DeleteObjectVersion",
+                "s3:GetObject",
+                "s3:GetObjectAcl",
+                "s3:GetObjectVersion",
+                "s3:GetObjectVersionAcl",
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:PutObjectAclVersion"
+            ],
+            "Resource": "arn:aws:s3:::my-wordpress-site-backup/*",
+            "Condition": {}
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*",
+            "Condition": {}
+        }
+    ]
+}
+```
+7\. Choose *Validate Policy* and ensure that no errors display in a red box at the top of the screen. Correct any that are reported.
+
+8\. Choose *Create Policy*.
+
+Now let's create an IAM user with an Access Key and attach the policy we've just created.
+
+**Create a new User and attach the User policy**
+
+1. Sign-in to the Identity and Access Management (IAM) console at https://console.aws.amazon.com/iam/.
+2. In the navigation pane, choose *Users* and then choose *Create New Users*.
+3. Enter the following user: **my-wordpress-site-backup**
+4. Select **Programmatic access** then click Next
+5. Select **Attach existing policies directly**
+6. Search for the policy we just made: **my-wordpress-site-backup**
+7. Click Next the Create User 
+8. Save the generated access key in a safe place.
+9. Choose *Close*.
+
+### Configuring the UpdraftPlus WordPress plugin
+
+We are now going to configure the UpdraftPlus WordPress plugin, we use this plugin to keep a backup of our database and media, so we can restore any of our environment from any backup.
+
+Open your browser to http://192.168.99.100/wp-admin/plugins.php
+
+1. Open the settings page of the UpdraftPlus plugin
+2. Goto the Settings Tab and configure the Backup settings:
+  * File Backup schedule: Daily and retain this many scheduled backups: 15 Days
+  * Database backup schedule: Daily and retain this many scheduled backups: 15 Days
+  * Remote storage: Amazon S3
+  * S3 access key: \<YOUR my-wordpress-site-backup ACCESS_KEY\> 
+  * S3 secret key: \<YOUR my-wordpress-site-backup SECRET_KEY\>
+  * S3 location: my-wordpress-site-backup/
+3. Click on **Test S3 Settings**
+4. Click on **Save Changes**
+5. Goto the Current Status Tab
+6. Click on **Backup Now**, ensure all checks are checked.
+ 
+UpdraftPlus Backup ensure we keep your WordPress State up to date on all environments.
+
+Let's open our S3 Backup Bucket my-wordpress-site-backup and get the latest DB backup filename to set our build.local.properties file with the s3_backup_url value.
+
+```
+s3_backup_url=s3://my-wordpress-site-backup/backup_2017-02-16-1006_My_WP_site_1437f9fb506f-db.gz
+```
+
+Let's configure our AWS cli profile using the S3 Bucket user:
+
+```
+aws configure --profile=my-wordpress-site
+AWS Access Key ID [None]: XXXXXXXXXXXXXXXXXX
+AWS Secret Access Key [None]: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
+Default region name [None]: eu-central-1
+Default output format [None]:
+```
+
+And let's rebuild our development environment:
+
+```
+AWS_DEFAULT_PROFILE=my-wordpress-site ./vendor/bin/phing setup-dev
+```
+
+As you can see now the wp-get-s3-backup get our backup and reinstall our WordPress with it, this enable us to make changes to our WordPress, make a backup and restore its state for all our environments.
+
+Let's do a test, add a page to our WordPress, make a backup, update the build.local.properties with the new WordPress database backup url and run the **setup-dev** phing target.
+
+Now Let's continue to set our AWS Elastic BeanStalk environment.
 
 ### Creating the EC2 Key Pair
 
@@ -448,7 +583,7 @@ chmod 400 my-key-pair.pem
   * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
   * MYSQL_ADDON_USER: wordpress_userdb
   * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
-  * S3_BACKUP_URL:
+  * S3_BACKUP_URL: \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\>
   * S3_MEDIA_URL:
 11. Select **Instances** and fill in the following:
   1. Root volume type: General Purpose (SSD)
@@ -470,7 +605,7 @@ chmod 400 my-key-pair.pem
 
 Let's create an IAM policy to grant continuousphp the permission to upload the package to your Elastic BeanStalk bucket and communicate with Elastic BeanStalk to deploy it.
 
-**Create the User policy**
+**Create the policy**
 
 1. Sign-in to the IAM console at https://console.aws.amazon.com/iam/ with your user that has administrator permissions.
 2. In the navigation pane, choose *Policies*.
@@ -624,7 +759,8 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * MYSQL_ADDON_DB: wordpress
       * MYSQL_ADDON_USER: root
       * MYSQL_ADDON_PASSWORD:
-      * S3_BACKUP_URL: 
+      * S3_BACKUP_URL:  \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\> 
+      * S3_MEDIA_URL:
       * SERVER_HOSTNAME: http://localhost/
       * AUTH_KEY:
       * AUTH_SALT:
