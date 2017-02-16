@@ -203,13 +203,13 @@
 
     <target name="setup-base"
             description="Setup external dependencies and migrate data"
-            depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy, wp-option-site, wp-clear-cache"/>
+            depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy"/>
     
     <target name="setup"
             description="Setup external dependencies and migrate data"
-            depends="setup-base, wp-copy-plugins, wp-plugins-activate, wp-copy-themes, wp-no-bot, wp-ssl-activate"/>
+            depends="setup-base, wp-option-site, wp-clear-cache, wp-copy-plugins, wp-plugins-activate, wp-copy-themes, wp-no-bot, wp-ssl-activate"/>
 
     <target name="setup-dev"
             description="Setup external dependencies and migrate data"
-            depends="setup-base, wp-plugins-activate, wp-behat-admin-update, wp-behat-qa-users"/>
+            depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-behat-admin-update, wp-behat-qa-users"/>
 </project>
