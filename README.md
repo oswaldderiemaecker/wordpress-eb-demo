@@ -760,10 +760,11 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * Region: US West (Oregon)
       * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       * Secret Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   5. Click on **Next** to move to the Test Settings
+   5. In the **PHING** section, add the following Phing Target: **wp-composer-plugins-update**
+   6. Click on **Next** to move to the Test Settings
 2. In the Test Settings (Step 2):
    1. continuousphp automatically discovers that you have a `behat.yml` and `phpunit.xml` in your repository and creates the testing configuration for you.
-   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **reset-db**, **setup-dev**, **wp-behat-admin-update** and **wp-behat-qa-users** 
+   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **reset-db** and **setup-test**
    3. Still in the **PHING** section, add the following variables:
       * MYSQL_ADDON_HOST: 127.0.0.1
       * MYSQL_ADDON_DB: wordpress
@@ -790,7 +791,8 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
    5. Click on **Next** to move to the Package Settings
 3. In the Package Settings (Step 3):
    1. Select **AWS ElasticBeanstalk**
-   2. Click on **Next** to move to the Deployment Settings
+   2. In the **PHING** section, add the following Phing Target: **wp-composer-plugins-update**
+   3. Click on **Next** to move to the Deployment Settings
 4. In the Deployment Settings (Step 4):
    1. Click on **+** on the **DESTINATIONS** panel
    2. Complete the destination:
