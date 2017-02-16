@@ -614,12 +614,27 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
    2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **setup**, **wp-behat-admin-update** and **wp-behat-qa-users** 
    3. Still in the **PHING** section, add the following variables:
       * MYSQL_ADDON_HOST: 127.0.0.1
-      * MYSQL_ADDON_DB: skeleton
+      * MYSQL_ADDON_DB: wordpress
       * MYSQL_ADDON_USER: root
       * MYSQL_ADDON_PASSWORD:
       * SERVER_HOSTNAME: http://localhost/
       * environment: develop
-   4. Click on **Next** to move to the Package Settings
+   4. Set the environment variables, Click on the + Next to **ENVIRONMENT VARIABLES**
+      * MYSQL_ADDON_HOST: 127.0.0.1
+      * MYSQL_ADDON_DB: wordpress
+      * MYSQL_ADDON_USER: root
+      * MYSQL_ADDON_PASSWORD:
+      * S3_BACKUP_URL: 
+      * SERVER_HOSTNAME: http://localhost/
+      * AUTH_KEY:
+      * AUTH_SALT:
+      * SECURE_AUTH_KEY:
+      * LOGGED_IN_KEY:
+      * NONCE_KEY:
+      * SECURE_AUTH_SALT:
+      * LOGGED_IN_SALT:
+      * NONCE_SALT:
+   5. Click on **Next** to move to the Package Settings
 3. In the Package Settings (Step 3):
    1. Select **AWS ElasticBeanstalk**
    2. Click on **Next** to move to the Deployment Settings
@@ -636,7 +651,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
 
 ## Deploying WordPress
 
-**Deploying WordPress  with continuousphp**
+**Deploying WordPress with continuousphp**
 
 1. Click on the **Play** button on the top right of the project
 2. Select the **develop** branch
