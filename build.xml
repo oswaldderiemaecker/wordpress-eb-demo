@@ -93,12 +93,18 @@
         <then>
           <echo message="Creating wp qa users for behat ..." /> 
           <exec command="./vendor/bin/wp user create editor-qa editor-qa@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
-          <exec command="./vendor/bin/wp user create nother-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
+          <exec command="./vendor/bin/wp user create another-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
         </then>
 	<else>
           <echo message="Not in development environment" />
 	</else> 
     </if>
+    </target>
+
+    <target name="wp-behat-delete-qa-users" description="Create users for behat tests (for develop/staging only)">
+       <echo message="Deleting wp qa users for behat ..." /> 
+       <exec command="./vendor/bin/wp user delete editor-qa --yes --path=./wp"  passthru="true" />
+       <exec command="./vendor/bin/wp user delete another-user --yes --path=./wp"  passthru="true" />
     </target>
 
     <target name="wp-no-bot" description="Set no bot in .htaccess (only in development and staging)">
@@ -181,10 +187,16 @@
     </target>
 
     <target name="db-migration" description="Update the database version with last backup">
-	<pdosqlexec url="mysql:host=${db_hostname};dbname=${db_name}" userid="${db_username}" password="${db_password}">
-            <transaction src="/tmp/backup.sql"/>
-        </pdosqlexec>
-        <exec command="rm -f /tmp/backup.sql.gz" passthru="true"/>
+	<available file="/tmp/backup.sql" type="file" property="db.exist" />
+	<if>
+	    <isset property="db.exist"/>
+	    <then>
+		<pdosqlexec url="mysql:host=${db_hostname};dbname=${db_name}" userid="${db_username}" password="${db_password}">
+        	    <transaction src="/tmp/backup.sql"/>
+        	</pdosqlexec>
+        	<exec command="rm -f /tmp/backup.sql.gz" passthru="true"/>
+	    </then>
+	</if>
     </target>
 
     <target name="wp-get-s3-backup" description="Get the S3 backup">
@@ -202,7 +214,7 @@
     <target name="reset-db" description="Reset the Database" depends="drop-db, init-db"/>
 
     <target name="setup-base"
-            description="Setup external dependencies and migrate data"
+            description="targets that always need to be done"
             depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy"/>
     
     <target name="setup"
@@ -212,4 +224,8 @@
     <target name="setup-dev"
             description="Setup external dependencies and migrate data"
             depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-behat-admin-update, wp-behat-qa-users"/>
+
+    <target name="setup-test"
+            description="targets for testing"
+            depends="setup-dev"/>
 </project>
