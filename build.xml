@@ -93,12 +93,18 @@
         <then>
           <echo message="Creating wp qa users for behat ..." /> 
           <exec command="./vendor/bin/wp user create editor-qa editor-qa@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
-          <exec command="./vendor/bin/wp user create nother-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
+          <exec command="./vendor/bin/wp user create another-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp"  passthru="true" />
         </then>
 	<else>
           <echo message="Not in development environment" />
 	</else> 
     </if>
+    </target>
+
+    <target name="wp-behat-delete-qa-users" description="Create users for behat tests (for develop/staging only)">
+       <echo message="Deleting wp qa users for behat ..." /> 
+       <exec command="./vendor/bin/wp user delete editor-qa --yes --path=./wp"  passthru="true" />
+       <exec command="./vendor/bin/wp user delete another-user --yes --path=./wp"  passthru="true" />
     </target>
 
     <target name="wp-no-bot" description="Set no bot in .htaccess (only in development and staging)">
