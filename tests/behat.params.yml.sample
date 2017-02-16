@@ -4,7 +4,6 @@ default:
     parameters:
       wp_users:
         editor-qa:
-          'password'
+          'password for editor-qa'
         another-user:
-          'password'
-          
+          'password for another-user'
