@@ -181,10 +181,16 @@
     </target>
 
     <target name="db-migration" description="Update the database version with last backup">
-	<pdosqlexec url="mysql:host=${db_hostname};dbname=${db_name}" userid="${db_username}" password="${db_password}">
-            <transaction src="/tmp/backup.sql"/>
-        </pdosqlexec>
-        <exec command="rm -f /tmp/backup.sql.gz" passthru="true"/>
+	<available file="/tmp/backup.sql" type="file" property="db.exist" />
+	<if>
+	    <isset property="db.exist"/>
+	    <then>
+		<pdosqlexec url="mysql:host=${db_hostname};dbname=${db_name}" userid="${db_username}" password="${db_password}">
+        	    <transaction src="/tmp/backup.sql"/>
+        	</pdosqlexec>
+        	<exec command="rm -f /tmp/backup.sql.gz" passthru="true"/>
+	    </then>
+	</if>
     </target>
 
     <target name="wp-get-s3-backup" description="Get the S3 backup">
