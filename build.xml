@@ -218,12 +218,12 @@
             depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy"/>
     
     <target name="setup"
-            description="targets for production"
-            depends="setup-base, wp-option-site, wp-clear-cache, wp-copy-plugins, wp-plugins-activate, wp-copy-themes, wp-no-bot, wp-ssl-activate"/>
+            description="Setup external dependencies and migrate data"
+            depends="setup-base, wp-option-site, wp-clear-cache, wp-copy-plugins, wp-plugins-activate, wp-copy-themes, wp-theme-activate, wp-no-bot, wp-ssl-activate"/>
 
     <target name="setup-dev"
-            description="targets for development"
-            depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-behat-admin-update"/>
+            description="Setup external dependencies and migrate data"
+            depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-behat-admin-update, wp-behat-qa-users"/>
 
     <target name="setup-test"
             description="targets for testing"
