@@ -203,7 +203,7 @@
 
     <target name="setup-base"
             description="Setup external dependencies and migrate data"
-            depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy, wp-option-site, wp-clear-cache"/>
+            depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy, db-migration, wp-option-site, wp-clear-cache"/>
     
     <target name="setup"
             description="Setup external dependencies and migrate data"

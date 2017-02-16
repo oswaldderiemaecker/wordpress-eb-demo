@@ -374,6 +374,32 @@ Let's first create an S3 bucket for your WP backup.
 
 When Amazon S3 has successfully created your bucket, the console displays your empty bucket **"my-wordpress-site-backup"** in the Bucket panel.
 
+Let's configure the Bucket Polocy.
+
+**Configuring the bucket policy**
+
+1. Open the **my-wordpress-site-backup** bucket properties.
+2. Goto **Permissions**
+3. Select the **Bucket Policy** and add:
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::648094104386:root"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::my-wordpress-site-backup/*"
+        }
+    ]
+}
+```
+
+
 ### Set-up the backup S3 bucket IAM policy
 
 Let's create an IAM policy to grant UpdraftPlus plugin the permission to upload the backups to your backup S3 bucket. 
