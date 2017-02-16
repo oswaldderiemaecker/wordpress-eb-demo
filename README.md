@@ -755,7 +755,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * Region: US West (Oregon)
       * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       * Secret Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-   4. Still in the **CREDENTIALS**, click on the **+**, add the AWS IAM Credential **my-wordpress-site-backup** User Access Key and Secret Key we created in step [Set-up the IAM permissions](#set-up-the-iam-permissions)
+   4. Still in the **CREDENTIALS**, click on the **+**, add the AWS IAM Credential **my-wordpress-site-backup** User Access Key and Secret Key we created in step [Set-up the backup S3 bucket IAM policy](#set-up-the-backup-s3-bucket-iam-policy)
       * Name: my-wordpress-site-backup
       * Region: US West (Oregon)
       * Access Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -763,7 +763,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
    5. Click on **Next** to move to the Test Settings
 2. In the Test Settings (Step 2):
    1. continuousphp automatically discovers that you have a `behat.yml` and `phpunit.xml` in your repository and creates the testing configuration for you.
-   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **setup**, **wp-behat-admin-update** and **wp-behat-qa-users** 
+   2. Click on the **Behat** configuration panel. In the **PHING** section, select the following Phing Targets: **reset-db**, **setup-dev**, **wp-behat-admin-update** and **wp-behat-qa-users** 
    3. Still in the **PHING** section, add the following variables:
       * MYSQL_ADDON_HOST: 127.0.0.1
       * MYSQL_ADDON_DB: wordpress
