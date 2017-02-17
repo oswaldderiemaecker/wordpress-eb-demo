@@ -543,7 +543,7 @@ chmod 400 my-key-pair.pem
 4. Choose Launch DB Instance. The Launch DB Instance Wizard opens on the Select Engine page.
 5. On the Select Engine page, choose the MySQL icon and then choose Select for the MySQL DB engine for Dev/Test.
 6. On the Specify DB Details page, specify your DB instance information. 
-  * DB Instance Class: db.m1.small
+  * DB Instance Class: db.t2.micro
   * Multi-AZ Deployment: No (We are in staging)
   * Allocated Storage: 5 GB
   * Storage Type: Magnetic
