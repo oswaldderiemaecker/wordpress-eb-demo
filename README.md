@@ -581,7 +581,8 @@ chmod 400 my-key-pair.pem
   1. Name: Staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following:
-  1. Environment properties:
+  1. Document root: /wp
+  2. Environment properties:
   * ENVIRONMENT: staging
   * AUTH_KEY:
   * AUTH_SALT:
@@ -606,9 +607,8 @@ chmod 400 my-key-pair.pem
   1. Email: \<YOUR_EMAIL\>
 14. Select **Network**
   1. Select your default VPC in the Virtual private cloud (VPC)
-  2. Check the Public IP address
-  3. Select all the Instance subnets
-  4. Instance security groups select:
+  2. Select all the Instance subnets
+  3. Instance security groups select:
   * rds-launch-wizard 
 15. Do not configure the Database settings.
 16. Choose Create environment.
