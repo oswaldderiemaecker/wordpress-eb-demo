@@ -33,7 +33,7 @@
         "wordpress-install-dir": "wp",
 	"installer-paths": {
             "wp/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
-            "wp/wp-content/themes/{$name}/": ["type:wordpress-themes"]
+            "wp/wp-content/themes/{$name}/": ["type:wordpress-theme"]
         }
     }
 }
