@@ -581,7 +581,8 @@ chmod 400 my-key-pair.pem
   1. Name: Staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following:
-  1. Environment properties:
+  1. Document root: /wp
+  2. Environment properties:
   * ENVIRONMENT: staging
   * AUTH_KEY:
   * AUTH_SALT:
