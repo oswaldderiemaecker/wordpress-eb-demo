@@ -59,7 +59,7 @@
 
     <target name="wp-theme-activate" description="Activates theme">
       <echo message="Activating theme: ${wp.theme}" /> 
-      <exec command="ls -l wp/wp-content/themes ; ./vendor/bin/wp theme activate ${wp.theme} --path=./wp" passthru="true" />
+      <exec command="ls -l wp-content/themes ; ./vendor/bin/wp theme activate ${wp.theme} --path=./wp" passthru="true" />
     </target>
 
     <target name="wp-clear-cache" description="Flush the WP cache">
