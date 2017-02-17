@@ -23,6 +23,7 @@
   - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
   - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
   - [Create your Staging Application Environment](#create-your-staging-application-environment)
+  - [Adding the EC2 Security Group to your RDS Database](#Adding-the-ec2-security-group-to-your-rds-database)
   - [Set up the IAM permissions](#set-up-the-iam-permissions)
 - [Set-up continuousphp](#set-up-continuousphp)
   - [Application Project Set-up in continuousphp](#application-project-set-up-in-continuousphp)
@@ -612,6 +613,22 @@ chmod 400 my-key-pair.pem
   * rds-launch-wizard 
 15. Do not configure the Database settings.
 16. Choose Create environment.
+
+### Adding the EC2 Security Group to your RDS Database
+
+In order to let the EC2 communicate with your WordPress RDS Database you need to add the EC2 Security Group to your RDS Database Security Group, for this:
+
+1. Sign-in to the IAM console at https://console.aws.amazon.com/ec2/ with your user that has administrator permissions. 
+2. Goto Security Groups
+3. Select the rds-launch-wizard Security Group
+4. Goto Inbound and Edit
+5. Add in Inboud Rule with:
+   * Type: MySQL/Aurora
+   * Protocol: TCP/IP
+   * Port Range: 3306
+   * Source: \<EC2_SECURITY_GROUP_ID\>
+
+To find the EC2 Security Group Id, find the Security Group Name called **my-wordpress-site**
 
 ## Set up the IAM permissions
 
