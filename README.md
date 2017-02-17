@@ -606,9 +606,8 @@ chmod 400 my-key-pair.pem
   1. Email: \<YOUR_EMAIL\>
 14. Select **Network**
   1. Select your default VPC in the Virtual private cloud (VPC)
-  2. Check the Public IP address
-  3. Select all the Instance subnets
-  4. Instance security groups select:
+  2. Select all the Instance subnets
+  3. Instance security groups select:
   * rds-launch-wizard 
 15. Do not configure the Database settings.
 16. Choose Create environment.
