@@ -230,7 +230,7 @@
         </elseif>
 
         <else>
-	  <echo message="WARNING: environment variable not set" /> 
+	  <fail message="ERROR: environment variable not set" /> 
         </else>
       </if>
     </target>
