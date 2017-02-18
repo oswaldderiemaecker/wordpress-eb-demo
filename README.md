@@ -23,6 +23,8 @@
   - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
   - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
   - [Create your Staging Application Environment](#create-your-staging-application-environment)
+  - [Configuring the DocumentRoot](#configuring-the-documentroot)
+  - [Configuring the WordPress Site URL](#configuring-the-wordpress-site-url)
   - [Adding the EC2 Security Group to your RDS Database](#Adding-the-ec2-security-group-to-your-rds-database)
   - [Set up the IAM permissions](#set-up-the-iam-permissions)
 - [Set-up continuousphp](#set-up-continuousphp)
@@ -582,8 +584,7 @@ chmod 400 my-key-pair.pem
   1. Name: Staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following:
-  1. Document root: /wp
-  2. Environment properties:
+  1. Environment properties:
   * ENVIRONMENT: staging
   * AUTH_KEY:
   * AUTH_SALT:
@@ -613,6 +614,26 @@ chmod 400 my-key-pair.pem
   * rds-launch-wizard 
 15. Do not configure the Database settings.
 16. Choose Create environment.
+
+### Configuring the DocumentRoot
+
+Now let's configure your DocumentRoot.
+
+1. Goto your Elastic Beanstalk application **my-wordpress-site**
+2. Select your environment **Staging**
+3. Goto Configuration
+4. Select **Software Configuration**, and fill in the following:
+  * Document root: /wp
+
+Now let's configure the WordPress Site URL.
+
+### Configuring the WordPress Site URL
+
+Still in the **Software Configuration** you will add the SERVER_HOSTNAME variable, but before let's get the URL of our Elastic BeanStalk URL available at the top of the page near the environment name, copy it and add the variable:
+
+* SERVER_HOSTNAME: http://staging-my-wordpress-site.eu-central-1.elasticbeanstalk.com/
+
+Note, if you configure a Route53 to your Elastic Load Balancer, use that domain name instead.
 
 ### Adding the EC2 Security Group to your RDS Database
 
