@@ -36,28 +36,23 @@
       <exec command="cp -Rvpf wp-root/.htaccess wp/" />
     </target>
 
-    <target name="wp-root-cat">
-      <echo message="Cat root ..." /> 
-      <exec command="cat wp/wp-config.php" passthru="true" />
-    </target>
-
     <target name="wp-plugins-activate" description="Activate Wordpress plugins">
       <foreach list="${wp.plugins}" delimiter="," param="plugin" target="wp-plugin-activate" />
     </target>
 
-    <target name="wp-option-site" description="Set the WP home and siteurl">
+    <target name="wp-option-site" description="Set the WP home and site URL">
       <echo message="Setting home to ${server_hostname}" /> 
       <exec command="${project.basedir}/vendor/bin/wp option update home '${server_hostname}' --path=${project.basedir}/wp --allow-root" />
       <echo message="Setting site url to ${server_hostname}" /> 
       <exec command="${project.basedir}/vendor/bin/wp option update siteurl '${server_hostname}' --path=${project.basedir}/wp --allow-root" />
     </target>
 
-    <target name="wp-plugin-activate" description="Activates plugin">
+    <target name="wp-plugin-activate" description="Activate plugin">
       <echo message="Activating plugin: ${plugin}" /> 
       <exec command="pwd ; ${project.basedir}/vendor/bin/wp plugin activate ${plugin} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
-    <target name="wp-theme-activate" description="Activates theme">
+    <target name="wp-theme-activate" description="Activate theme">
       <echo message="Activating theme: ${wp.theme}" /> 
       <exec command="pwd ; ${project.basedir}/vendor/bin/wp theme activate ${wp.theme} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
@@ -68,11 +63,10 @@
       <exec command="${project.basedir}/vendor/bin/wp total-cache flush all --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
-    <target name="wp-behat-admin-update" description="Update WP admin user (for develop/staging only)">
+    <target name="wp-behat-admin-update" description="Update WP admin user (for develop only)">
     <if>
 	<or>
           <equals arg1="${environment}" arg2="develop" />
-          <equals arg1="${environment}" arg2="staging" />
 	</or>
         <then>
           <echo message="Updating wp admin pass for behat ..." /> 
@@ -101,7 +95,7 @@
     </if>
     </target>
 
-    <target name="wp-behat-delete-qa-users" description="Create users for behat tests (for develop/staging only)">
+    <target name="wp-behat-delete-qa-users" description="Delete QA users for behat tests">
        <echo message="Deleting wp qa users for behat ..." /> 
        <exec command="${project.basedir}/vendor/bin/wp user delete editor-qa --yes --path=${project.basedir}/wp --allow-root"  passthru="true" />
        <exec command="${project.basedir}/vendor/bin/wp user delete another-user --yes --path=${project.basedir}/wp --allow-root"  passthru="true" />
@@ -221,14 +215,14 @@
           </phingcall>
         </then>
         <elseif>
-	  <equals arg1="${environment}" arg2="staging" />
+	  <equals arg1="${env.environment}" arg2="staging" />
           <then>
     	    <phingcall target="setup-staging">
             </phingcall>
           </then>
         </elseif>
         <elseif>
-	  <equals arg1="${environment}" arg2="production" />
+	  <equals arg1="${env.environment}" arg2="production" />
           <then>
     	    <phingcall target="setup">
             </phingcall>
