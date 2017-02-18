@@ -207,7 +207,7 @@
 
     <target name="reset-db" description="Reset the Database" depends="drop-db, init-db"/>
 
-    <target name="run">
+    <target name="setup">
       <if>
 	<equals arg1="${environment}" arg2="develop" />
         <then>
