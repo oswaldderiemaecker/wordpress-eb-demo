@@ -220,20 +220,24 @@
     	  <phingcall target="setup-dev">
           </phingcall>
         </then>
-      </if>
-      <if>
-	<equals arg1="${environment}" arg2="staging" />
-        <then>
-    	  <phingcall target="setup-staging">
-          </phingcall>
-        </then>
-      </if>
-      <if>
-	<equals arg1="${environment}" arg2="production" />
-        <then>
-    	  <phingcall target="setup">
-          </phingcall>
-        </then>
+        <elseif>
+	  <equals arg1="${environment}" arg2="staging" />
+          <then>
+    	    <phingcall target="setup-staging">
+            </phingcall>
+          </then>
+        </elseif>
+        <elseif>
+	  <equals arg1="${environment}" arg2="production" />
+          <then>
+    	    <phingcall target="setup">
+            </phingcall>
+          </then>
+        </elseif>
+
+        <else>
+	  <echo message="WARNING: environment variable not set" /> 
+        </else>
       </if>
     </target>
 
