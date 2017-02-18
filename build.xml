@@ -47,25 +47,25 @@
 
     <target name="wp-option-site" description="Set the WP home and siteurl">
       <echo message="Setting home to ${server_hostname}" /> 
-      <exec command="./vendor/bin/wp option update home '${server_hostname}' --path=./wp --allow-root" />
+      <exec command="${project.basedir}/vendor/bin/wp option update home '${server_hostname}' --path=${project.basedir}/wp --allow-root" />
       <echo message="Setting site url to ${server_hostname}" /> 
-      <exec command="./vendor/bin/wp option update siteurl '${server_hostname}' --path=./wp --allow-root" />
+      <exec command="${project.basedir}/vendor/bin/wp option update siteurl '${server_hostname}' --path=${project.basedir}/wp --allow-root" />
     </target>
 
     <target name="wp-plugin-activate" description="Activates plugin">
       <echo message="Activating plugin: ${plugin}" /> 
-      <exec command="./vendor/bin/wp plugin activate ${plugin} --path=./wp --allow-root" passthru="true" />
+      <exec command="${project.basedir}/vendor/bin/wp plugin activate ${plugin} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
     <target name="wp-theme-activate" description="Activates theme">
       <echo message="Activating theme: ${wp.theme}" /> 
-      <exec command="ls -l wp-content/themes ; ./vendor/bin/wp theme activate ${wp.theme} --path=./wp --allow-root" passthru="true" />
+      <exec command="ls -l wp-content/themes ; ${project.basedir}/vendor/bin/wp theme activate ${wp.theme} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
     <target name="wp-clear-cache" description="Flush the WP cache">
       <echo message="Clear wp cache" /> 
-      <exec command="./vendor/bin/wp cache flush --path=wp --allow-root" passthru="true" />
-      <exec command="./vendor/bin/wp total-cache flush all --path=wp --allow-root" passthru="true" />
+      <exec command="${project.basedir}/vendor/bin/wp cache flush --path=${project.basedir}/wp --allow-root" passthru="true" />
+      <exec command="${project.basedir}/vendor/bin/wp total-cache flush all --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
     <target name="wp-behat-admin-update" description="Update WP admin user (for develop/staging only)">
@@ -76,7 +76,7 @@
 	</or>
         <then>
           <echo message="Updating wp admin pass for behat ..." /> 
-          <exec command="./vendor/bin/wp user update admin --display_name=Admin --user_pass=password --path=./wp --allow-root" passthru="true"/>
+	  <exec command="${project.basedir}/vendor/bin/wp user update admin --display_name=Admin --user_pass=password --path=${project.basedir}/wp --allow-root" passthru="true"/>
         </then>
 	<else>
           <echo message="Not in development environment" />
@@ -92,8 +92,8 @@
 	</or>
         <then>
           <echo message="Creating wp qa users for behat ..." /> 
-          <exec command="./vendor/bin/wp user create editor-qa editor-qa@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp --allow-root"  passthru="true" />
-          <exec command="./vendor/bin/wp user create another-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=./wp --allow-root"  passthru="true" />
+	  <exec command="${project.basedir}/vendor/bin/wp user create editor-qa editor-qa@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=${project.basedir}/wp --allow-root"  passthru="true" />
+	  <exec command="${project.basedir}/vendor/bin/wp user create another-user another-user@continuous.lu --display_name=QA-Editor --user_pass=password --role=administrator --path=${project.basedir}/wp --allow-root"  passthru="true" />
         </then>
 	<else>
           <echo message="Not in development environment" />
@@ -103,8 +103,8 @@
 
     <target name="wp-behat-delete-qa-users" description="Create users for behat tests (for develop/staging only)">
        <echo message="Deleting wp qa users for behat ..." /> 
-       <exec command="./vendor/bin/wp user delete editor-qa --yes --path=./wp --allow-root"  passthru="true" />
-       <exec command="./vendor/bin/wp user delete another-user --yes --path=./wp --allow-root"  passthru="true" />
+       <exec command="${project.basedir}/vendor/bin/wp user delete editor-qa --yes --path=${project.basedir}/wp --allow-root"  passthru="true" />
+       <exec command="${project.basedir}/vendor/bin/wp user delete another-user --yes --path=${project.basedir}/wp --allow-root"  passthru="true" />
     </target>
 
     <target name="wp-no-bot" description="Set no bot in .htaccess (only in development and staging)">
