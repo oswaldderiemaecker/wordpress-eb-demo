@@ -176,7 +176,7 @@ export MYSQL_ADDON_PASSWORD=password
 export MYSQL_ADDON_USER=root
 export S3_BACKUP_URL=
 export S3_MEDIA_URL=
-export ENVIRONMENT=develop
+export environment=develop
 ```
 
 If you plan to use the WordPress Security Keys (which we recommend), [generate the keys](https://api.wordpress.org/secret-key/1.1/salt/) and export them:
@@ -591,7 +591,7 @@ chmod 400 my-key-pair.pem
   1. Name: Staging
   2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following **Environment properties**:
-  * ENVIRONMENT: staging
+  * environment: staging
   * MYSQL_ADDON_DB: staging_my_wordpress_site_db 
   * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
   * MYSQL_ADDON_USER: wordpress_userdb
