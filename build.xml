@@ -213,20 +213,44 @@
 
     <target name="reset-db" description="Reset the Database" depends="drop-db, init-db"/>
 
+    <target name="run">
+      <if>
+	<equals arg1="${environment}" arg2="develop" />
+        <then>
+    	  <phingcall target="setup-dev">
+          </phingcall>
+        </then>
+      </if>
+      <if>
+	<equals arg1="${environment}" arg2="staging" />
+        <then>
+    	  <phingcall target="setup-staging">
+          </phingcall>
+        </then>
+      </if>
+      <if>
+	<equals arg1="${environment}" arg2="production" />
+        <then>
+    	  <phingcall target="setup">
+          </phingcall>
+        </then>
+      </if>
+    </target>
+
     <target name="setup-base"
             description="targets that always need to be done"
             depends="wp-get-s3-backup, wp-get-s3-media, wp-root-copy, wp-copy-plugins"/>
     
-    <target name="setup"
-            description="Setup external dependencies and migrate data"
+    <target name="setup-production"
+            description="Setup for production"
             depends="setup-base, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-copy-themes, wp-theme-activate"/>
 
     <target name="setup-staging"
-            description="Setup external dependencies and migrate data"
+            description="Setup for staging"
             depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-no-bot"/>
 
     <target name="setup-dev"
-            description="Setup external dependencies and migrate data"
+            description="Setup for development"
             depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-behat-admin-update, wp-behat-qa-users"/>
 
     <target name="setup-test"
