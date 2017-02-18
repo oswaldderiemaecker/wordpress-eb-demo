@@ -54,12 +54,12 @@
 
     <target name="wp-plugin-activate" description="Activates plugin">
       <echo message="Activating plugin: ${plugin}" /> 
-      <exec command="${project.basedir}/vendor/bin/wp plugin activate ${plugin} --path=${project.basedir}/wp --allow-root" passthru="true" />
+      <exec command="pwd ; ${project.basedir}/vendor/bin/wp plugin activate ${plugin} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
     <target name="wp-theme-activate" description="Activates theme">
       <echo message="Activating theme: ${wp.theme}" /> 
-      <exec command="ls -l wp-content/themes ; ${project.basedir}/vendor/bin/wp theme activate ${wp.theme} --path=${project.basedir}/wp --allow-root" passthru="true" />
+      <exec command="pwd ; ${project.basedir}/vendor/bin/wp theme activate ${wp.theme} --path=${project.basedir}/wp --allow-root" passthru="true" />
     </target>
 
     <target name="wp-clear-cache" description="Flush the WP cache">
