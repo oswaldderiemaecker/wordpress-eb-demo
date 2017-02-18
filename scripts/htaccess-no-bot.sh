@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $ENVIRONMENT == "staging" ]
+if [ "$environemt" = "staging" ]
 then
   if grep -Fxq "# NO-BOT" wp/.htaccess
   then
