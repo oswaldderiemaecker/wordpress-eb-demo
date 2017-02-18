@@ -156,7 +156,7 @@
     </target>
 
     <target name="wp-copy-plugins" description="Copy plugins into WP plugins folder (only used in build process)">
-      <echo message="Adding custom themes ..." /> 
+      <echo message="Adding custom plugins ..." /> 
       <exec command="cp -Rvpf wp-content/plugins/* wp/wp-content/plugins" />
     </target>
 
@@ -223,7 +223,7 @@
 
     <target name="setup-staging"
             description="Setup external dependencies and migrate data"
-            depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-behat-admin-update, wp-behat-qa-users, wp-no-bot"/>
+            depends="setup-base, db-migration, wp-option-site, wp-clear-cache, wp-plugins-activate, wp-theme-activate, wp-no-bot"/>
 
     <target name="setup-dev"
             description="Setup external dependencies and migrate data"
