@@ -580,10 +580,9 @@ chmod 400 my-key-pair.pem
 8. Configuration presets: Custom configuration 
 9. Select **Environment settings** and fill in the following:
   1. Name: Staging
-  2. Domain: my-wordpress-site
+  2. Domain: staging-my-wordpress-site
 10. Select **Software settings** and fill in the following:
-  1. Document root: /wp
-  2. Environment properties:
+  1. Environment properties:
   * ENVIRONMENT: staging
   * AUTH_KEY:
   * AUTH_SALT:
@@ -613,6 +612,18 @@ chmod 400 my-key-pair.pem
   * rds-launch-wizard 
 15. Do not configure the Database settings.
 16. Choose Create environment.
+
+Elastic BeanStalk has deployed a sample application, let's finalize the configuration.
+
+### Setting the WordPress Document Root
+
+1. Goto your Application **my-wordpress-site**
+2. Select your Environmnt **Staging**
+3. Goto Configuration
+4. Select **Software Configuration** and fill in the following:
+   * Document root: /wp
+
+Let's configure your EC2 Securiy Group so that your instance can connect to your WordPress Database.
 
 ### Adding the EC2 Security Group to your RDS Database
 
@@ -673,7 +684,7 @@ Let's create an IAM policy to grant continuousphp the permission to upload the p
         },
         {
             "Action": [
-                "s3:GetObject"
+                "s3:Get*"
             ],
             "Effect": "Allow",
             "Resource": [
@@ -724,6 +735,11 @@ Let's create an IAM policy to grant continuousphp the permission to upload the p
                 "arn:aws:elasticloadbalancing:<AWS-REGION>:<AWS-ACCOUNT-ID>:loadbalancer",
                 "arn:aws:elasticloadbalancing:<AWS-REGION>:<AWS-ACCOUNT-ID>:loadbalancer/*"
             ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "sns:*",
+            "Resource": "arn:aws:sns:<AWS-REGION>:<AWS-ACCOUNT-ID>:*"
         }
     ]
 }
