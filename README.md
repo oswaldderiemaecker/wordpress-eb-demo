@@ -3,33 +3,33 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Set-up your Development environment](#set-up-your-development-environment)
-  - [Prepare your WordPress Repository](#prepare-your-wordpress-repository)
-  - [Dependencies management with composer](#dependencies-management-with-composer)
-  - [Phing environment variables](#phing-environment-variables)
-  - [Configuring Wordpress](#configuring-wordpress)
-  - [Starting docker-compose](#starting-docker-compose)
-  - [Initializing the Database](#initializing-the-database)
-  - [WordPress Base Install](#wordpress-base-install)
-  - [Configuring your development environment](#configuring-your-development-environment)
-  - [Plugin Installation](#plugin-installation)
-  - [Themes Installation](#themes-installation)
-  - [Developing a dumy plugin](#developing-a-dumy-plugin)
+- [Prepare your WordPress Repository](#prepare-your-wordpress-repository)
+- [Dependencies management with composer](#dependencies-management-with-composer)
+- [Phing environment variables](#phing-environment-variables)
+- [Configuring Wordpress](#configuring-wordpress)
+- [Starting docker-compose](#starting-docker-compose)
+- [Initializing the Database](#initializing-the-database)
+- [WordPress Base Install](#wordpress-base-install)
+- [Configuring your development environment](#configuring-your-development-environment)
+- [Plugin Installation](#plugin-installation)
+- [Themes Installation](#themes-installation)
+- [Developing a dumy plugin](#developing-a-dumy-plugin)
 - [Set-up AWS Elastic BeanStalk Staging environment](#set-up-aws-elastic-beanstalk-staging-environment)
-  - [Set-up the AWS environment accounts](#set-up-the-aws-environment-accounts)
-  - [Set-up the backup S3 bucket](#set-up-the-backup-s3-bucket)
-  - [Set-up the backup S3 bucket IAM policy](#set-up-the-backup-s3-bucket-iam-policy)
-  - [Configuring the UpdraftPlus WordPress plugin](#configuring-the-updraftplus-wordpress-plugin)
-  - [Creating the EC2 Key Pair](#creating-the-ec2-key-pair)
-  - [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
-  - [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
-  - [Create your Staging Application Environment](#create-your-staging-application-environment)
-  - [Configuring the DocumentRoot](#configuring-the-documentroot)
-  - [Configuring the WordPress Site URL](#configuring-the-wordpress-site-url)
-  - [Adding the EC2 Security Group to your RDS Database](#Adding-the-ec2-security-group-to-your-rds-database)
-  - [Set up the IAM permissions](#set-up-the-iam-permissions)
+- [Set-up the AWS environment accounts](#set-up-the-aws-environment-accounts)
+- [Set-up the backup S3 bucket](#set-up-the-backup-s3-bucket)
+- [Set-up the backup S3 bucket IAM policy](#set-up-the-backup-s3-bucket-iam-policy)
+- [Configuring the UpdraftPlus WordPress plugin](#configuring-the-updraftplus-wordpress-plugin)
+- [Creating the EC2 Key Pair](#creating-the-ec2-key-pair)
+- [Creating the MySQL DB Instance](#creating-the-mysql-db-instance)
+- [Set-up your Elastic BeanStalk Application](#set-up-your-elastic-beanstalk-application)
+- [Create your Staging Application Environment](#create-your-staging-application-environment)
+- [Configuring the DocumentRoot](#configuring-the-documentroot)
+- [Configuring the WordPress Site URL](#configuring-the-wordpress-site-url)
+- [Adding the EC2 Security Group to your RDS Database](#Adding-the-ec2-security-group-to-your-rds-database)
+- [Set up the IAM permissions](#set-up-the-iam-permissions)
 - [Set-up continuousphp](#set-up-continuousphp)
-  - [Application Project Set-up in continuousphp](#application-project-set-up-in-continuousphp)
-  - [Deployment pipeline Configuration](#deployment-pipeline-configuration)
+- [Application Project Set-up in continuousphp](#application-project-set-up-in-continuousphp)
+- [Deployment pipeline Configuration](#deployment-pipeline-configuration)
 - [Deploying Wordpress](#deploying-wordpress)
 - [Notes](#notes)
 
@@ -113,16 +113,16 @@ Create the symlinks to enable plugins and themes in development mode:
 Most of the WP plugins can be found on [wordpress packagist](https://wpackagist.org/), add them to your composer.json like:
 
 ```
-    "require": {
-        "php": ">=7.0",
-        "johnpbloch/wordpress": ">=4.7.2",
-        "composer/installers": "~1.0",
-        "wpackagist-plugin/contact-form-7": "4.6.1",
-        "wpackagist-plugin/business-profile": "1.1.1",
-        "robmorgan/phinx": "~0.6.0",
-        "wp-cli/wp-cli": "^1.0",
-        "phing/phing": "~2.14"
-    },
+"require": {
+"php": ">=7.0",
+"johnpbloch/wordpress": ">=4.7.2",
+"composer/installers": "~1.0",
+"wpackagist-plugin/contact-form-7": "4.6.1",
+"wpackagist-plugin/business-profile": "1.1.1",
+"robmorgan/phinx": "~0.6.0",
+"wp-cli/wp-cli": "^1.0",
+"phing/phing": "~2.14"
+},
 ```
 
 ### Configuring Wordpress
@@ -152,7 +152,7 @@ define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
 ```
 
-And Add:
+and add:
 
 ```
 define('AUTH_KEY',         $_SERVER["AUTH_KEY"]);
@@ -177,6 +177,11 @@ export MYSQL_ADDON_USER=root
 export S3_BACKUP_URL=
 export S3_MEDIA_URL=
 export ENVIRONMENT=develop
+```
+
+If you plan to use the WordPress Security Keys (which we recommend), [generate the keys](https://api.wordpress.org/secret-key/1.1/salt/) and export them:
+
+```
 export AUTH_KEY=""
 export SECURE_AUTH_KEY=""
 export LOGGED_IN_KEY=""
@@ -187,12 +192,14 @@ export LOGGED_IN_SALT=""
 export NONCE_SALT=""
 ```
 
+Keep those keys in a safe place.
+
 ### Starting docker-compose
 
 ```
 docker-compose up
 ``` 
- 
+
 #### Initializing the Database
 
 Now let's initialize our WP database.
@@ -233,19 +240,19 @@ We are going to add a few plugins.
 For this we add the "wpackagist-plugin/updraftplus", "wpackagist-plugin/w3-total-cache" and "wpackagist-plugin/wordpress-https" dependencies in our composer.json file like:
 
 ```
-    "require": {
-        "php": ">=7.0",
-        "johnpbloch/wordpress": ">=4.7.2",
-        "composer/installers": "~1.0",
-        "wpackagist-plugin/contact-form-7": "4.6.1",
-        "wpackagist-plugin/business-profile": "1.1.1",
-        "wpackagist-plugin/updraftplus": "1.12.32",
-        "wpackagist-plugin/w3-total-cache": "0.9.5.1",
-        "wpackagist-plugin/wordpress-https": "3.3.6",
-        "robmorgan/phinx": "~0.6.0",
-        "wp-cli/wp-cli": "^1.0",
-        "phing/phing": "~2.14"
-    },
+"require": {
+"php": ">=7.0",
+"johnpbloch/wordpress": ">=4.7.2",
+"composer/installers": "~1.0",
+"wpackagist-plugin/contact-form-7": "4.6.1",
+"wpackagist-plugin/business-profile": "1.1.1",
+"wpackagist-plugin/updraftplus": "1.12.32",
+"wpackagist-plugin/w3-total-cache": "0.9.5.1",
+"wpackagist-plugin/wordpress-https": "3.3.6",
+"robmorgan/phinx": "~0.6.0",
+"wp-cli/wp-cli": "^1.0",
+"phing/phing": "~2.14"
+},
 ```
 
 Edit the build.properties and add our new plugins into the wp.plugins variables, this varibales is used by the Phing target wp-plugins-activate.
@@ -275,7 +282,7 @@ Notice all the plugin are installed and activated, but wait a minute, we W3 Tota
 Get the latest version at [WordPress Packagist](https://wpackagist.org/search?q=w3-total-cache&type=any&search=)
 
 ``` 
-        "wpackagist-plugin/w3-total-cache": "0.9.5.2",
+"wpackagist-plugin/w3-total-cache": "0.9.5.2",
 ```
 
 Run composer update and refresh the plugin page, our plugin is up to date!
@@ -319,14 +326,14 @@ And add a dumy-plugin.php file with the following:
 
 ```
 <?php
-    /*
-    Plugin Name: dumy-plugin 
-    Plugin URI:
-    Description: A Dumy plugin 
-    Author: John Doe
-    Version: 1.0
-    Author URI: https://www.johndoe-dumy-plugin.com
-    */
+/*
+Plugin Name: dumy-plugin 
+Plugin URI:
+Description: A Dumy plugin 
+Author: John Doe
+Version: 1.0
+Author URI: https://www.johndoe-dumy-plugin.com
+*/
 ?>
 ```
 
@@ -387,18 +394,18 @@ Let's configure the Bucket Polocy.
 
 ```
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::648094104386:root"
-            },
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::my-wordpress-site-backup/*"
-        }
-    ]
+"Version": "2012-10-17",
+"Statement": [
+{
+    "Sid": "PublicReadGetObject",
+    "Effect": "Allow",
+    "Principal": {
+	"AWS": "arn:aws:iam::648094104386:root"
+    },
+    "Action": "s3:GetObject",
+    "Resource": "arn:aws:s3:::my-wordpress-site-backup/*"
+}
+]
 }
 ```
 
@@ -418,42 +425,42 @@ Let's create an IAM policy to grant UpdraftPlus plugin the permission to upload 
 
 ```
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket",
-                "s3:GetBucketLocation",
-                "s3:ListBucketMultipartUploads"
-            ],
-            "Resource": "arn:aws:s3:::my-wordpress-site-backup",
-            "Condition": {}
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:AbortMultipartUpload",
-                "s3:DeleteObject",
-                "s3:DeleteObjectVersion",
-                "s3:GetObject",
-                "s3:GetObjectAcl",
-                "s3:GetObjectVersion",
-                "s3:GetObjectVersionAcl",
-                "s3:PutObject",
-                "s3:PutObjectAcl",
-                "s3:PutObjectAclVersion"
-            ],
-            "Resource": "arn:aws:s3:::my-wordpress-site-backup/*",
-            "Condition": {}
-        },
-        {
-            "Effect": "Allow",
-            "Action": "s3:ListAllMyBuckets",
-            "Resource": "*",
-            "Condition": {}
-        }
-    ]
+"Version": "2012-10-17",
+"Statement": [
+{
+    "Effect": "Allow",
+    "Action": [
+	"s3:ListBucket",
+	"s3:GetBucketLocation",
+	"s3:ListBucketMultipartUploads"
+    ],
+    "Resource": "arn:aws:s3:::my-wordpress-site-backup",
+    "Condition": {}
+},
+{
+    "Effect": "Allow",
+    "Action": [
+	"s3:AbortMultipartUpload",
+	"s3:DeleteObject",
+	"s3:DeleteObjectVersion",
+	"s3:GetObject",
+	"s3:GetObjectAcl",
+	"s3:GetObjectVersion",
+	"s3:GetObjectVersionAcl",
+	"s3:PutObject",
+	"s3:PutObjectAcl",
+	"s3:PutObjectAclVersion"
+    ],
+    "Resource": "arn:aws:s3:::my-wordpress-site-backup/*",
+    "Condition": {}
+},
+{
+    "Effect": "Allow",
+    "Action": "s3:ListAllMyBuckets",
+    "Resource": "*",
+    "Condition": {}
+}
+]
 }
 ```
 7\. Choose *Validate Policy* and ensure that no errors display in a red box at the top of the screen. Correct any that are reported.
@@ -482,17 +489,17 @@ Open your browser to http://192.168.99.100/wp-admin/plugins.php
 
 1. Open the settings page of the UpdraftPlus plugin
 2. Goto the Settings Tab and configure the Backup settings:
-  * File Backup schedule: Daily and retain this many scheduled backups: 15 Days
-  * Database backup schedule: Daily and retain this many scheduled backups: 15 Days
-  * Remote storage: Amazon S3
-  * S3 access key: \<YOUR my-wordpress-site-backup ACCESS_KEY\> 
-  * S3 secret key: \<YOUR my-wordpress-site-backup SECRET_KEY\>
-  * S3 location: my-wordpress-site-backup/
+* File Backup schedule: Daily and retain this many scheduled backups: 15 Days
+* Database backup schedule: Daily and retain this many scheduled backups: 15 Days
+* Remote storage: Amazon S3
+* S3 access key: \<YOUR my-wordpress-site-backup ACCESS_KEY\> 
+* S3 secret key: \<YOUR my-wordpress-site-backup SECRET_KEY\>
+* S3 location: my-wordpress-site-backup/
 3. Click on **Test S3 Settings**
 4. Click on **Save Changes**
 5. Goto the Current Status Tab
 6. Click on **Backup Now**, ensure all checks are checked.
- 
+
 UpdraftPlus Backup ensure we keep your WordPress State up to date on all environments.
 
 Let's open our S3 Backup Bucket my-wordpress-site-backup and get the latest DB backup filename to set our build.local.properties file with the s3_backup_url value.
@@ -545,19 +552,19 @@ chmod 400 my-key-pair.pem
 4. Choose Launch DB Instance. The Launch DB Instance Wizard opens on the Select Engine page.
 5. On the Select Engine page, choose the MySQL icon and then choose Select for the MySQL DB engine for Dev/Test.
 6. On the Specify DB Details page, specify your DB instance information. 
-  * DB Instance Class: db.t2.micro
-  * Multi-AZ Deployment: No (We are in staging)
-  * Allocated Storage: 5 GB
-  * Storage Type: Magnetic
-  * DB Instance Identifier: staging-my-wordpress-site-db
-  * Master Username: wordpress_userdb
-  * Master Password: \<YOUR_PASSWORD\>
-  * VPC: Select the default VPC
-  * Publicly Accessible: No
-  * VPC Security Group(s): Create New Security Group 
-  * Database Name: staging_my_wordpress_site_db
-  * Backup Retention Period: 1
-  * Auto Minor Version Upgrade: Yes
+* DB Instance Class: db.t2.micro
+* Multi-AZ Deployment: No (We are in staging)
+* Allocated Storage: 5 GB
+* Storage Type: Magnetic
+* DB Instance Identifier: staging-my-wordpress-site-db
+* Master Username: wordpress_userdb
+* Master Password: \<YOUR_PASSWORD\>
+* VPC: Select the default VPC
+* Publicly Accessible: No
+* VPC Security Group(s): Create New Security Group 
+* Database Name: staging_my_wordpress_site_db
+* Backup Retention Period: 1
+* Auto Minor Version Upgrade: Yes
 
 ### Set-up your Elastic BeanStalk Application
 
@@ -582,10 +589,16 @@ chmod 400 my-key-pair.pem
 8. Configuration presets: Custom configuration 
 9. Select **Environment settings** and fill in the following:
   1. Name: Staging
-  2. Domain: staging-my-wordpress-site
-10. Select **Software settings** and fill in the following:
-  1. Environment properties:
+  2. Domain: my-wordpress-site
+10. Select **Software settings** and fill in the following **Environment properties**:
   * ENVIRONMENT: staging
+  * MYSQL_ADDON_DB: staging_my_wordpress_site_db 
+  * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
+  * MYSQL_ADDON_USER: wordpress_userdb
+  * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
+  * S3_BACKUP_URL: \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\>
+  * S3_MEDIA_URL:
+12. Optionally if you have configured the WP Security Keys, set the following variables as well:
   * AUTH_KEY:
   * AUTH_SALT:
   * LOGGED_IN_KEY:
@@ -594,26 +607,20 @@ chmod 400 my-key-pair.pem
   * NONCE_SALT:
   * SECURE_AUTH_KEY:
   * SECURE_AUTH_SALT:
-  * MYSQL_ADDON_DB: staging_my_wordpress_site_db 
-  * MYSQL_ADDON_HOST: staging-my-wordpress-site-db.ce7wdtyntw8p.\<REGION\>.rds.amazonaws.com
-  * MYSQL_ADDON_USER: wordpress_userdb
-  * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
-  * S3_BACKUP_URL: \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\>
-  * S3_MEDIA_URL:
-11. Select **Instances** and fill in the following:
+13. Select **Instances** and fill in the following:
   1. Root volume type: General Purpose (SSD)
   2. Size: 10 GB
-12. Select **Security** 
+14. Select **Security** 
   1. EC2 key pair: \<YOUR_KEY_PAIR\>
-13. Select **Notifications**
+15. Select **Notifications**
   1. Email: \<YOUR_EMAIL\>
-14. Select **Network**
+16. Select **Network**
   1. Select your default VPC in the Virtual private cloud (VPC)
   2. Select all the Instance subnets
   3. Instance security groups select:
   * rds-launch-wizard 
-15. Do not configure the Database settings.
-16. Choose Create environment.
+17. Do not configure the Database settings.
+18. Choose Create environment.
 
 ### Configuring the DocumentRoot
 
@@ -823,6 +830,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * S3_BACKUP_URL:  \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\> 
       * S3_MEDIA_URL:
       * SERVER_HOSTNAME: http://localhost/
+    5. Optionnaly if you configured the WordPress Security Keys:
       * AUTH_KEY:
       * AUTH_SALT:
       * SECURE_AUTH_KEY:
@@ -831,7 +839,7 @@ Now let's create an IAM user with an Access Key and attach the policy we've just
       * SECURE_AUTH_SALT:
       * LOGGED_IN_SALT:
       * NONCE_SALT:
-   5. Click on **Next** to move to the Package Settings
+   6. Click on **Next** to move to the Package Settings
 3. In the Package Settings (Step 3):
    1. Select **AWS ElasticBeanstalk**
    2. In the **PHING** section, add the following Phing Target: **wp-composer-plugins-update**
