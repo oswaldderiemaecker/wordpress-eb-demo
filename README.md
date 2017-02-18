@@ -588,8 +588,8 @@ chmod 400 my-key-pair.pem
 7. Choose Configure more options.
 8. Configuration presets: Custom configuration 
 9. Select **Environment settings** and fill in the following:
-1. Name: Staging
-2. Domain: my-wordpress-site
+  1. Name: Staging
+  2. Domain: my-wordpress-site
 10. Select **Software settings** and fill in the following **Environment properties**:
   * ENVIRONMENT: staging
   * MYSQL_ADDON_DB: staging_my_wordpress_site_db 
@@ -598,7 +598,7 @@ chmod 400 my-key-pair.pem
   * MYSQL_ADDON_PASSWORD: \<YOUR_DB_PASSWORD\>
   * S3_BACKUP_URL: \<YOUR_S3_WORDPRESS_DATABASE_BACKUP\>
   * S3_MEDIA_URL:
-12. Optionally if you have configured the WP Security Keys, set the following variables as well:
+11. Optionally if you have configured the WP Security Keys, set the following variables as well:
   * AUTH_KEY:
   * AUTH_SALT:
   * LOGGED_IN_KEY:
@@ -607,20 +607,20 @@ chmod 400 my-key-pair.pem
   * NONCE_SALT:
   * SECURE_AUTH_KEY:
   * SECURE_AUTH_SALT:
-13. Select **Instances** and fill in the following:
+12. Select **Instances** and fill in the following:
   1. Root volume type: General Purpose (SSD)
   2. Size: 10 GB
-14. Select **Security** 
+13. Select **Security** 
   1. EC2 key pair: \<YOUR_KEY_PAIR\>
-15. Select **Notifications**
+14. Select **Notifications**
   1. Email: \<YOUR_EMAIL\>
-16. Select **Network**
+15. Select **Network**
   1. Select your default VPC in the Virtual private cloud (VPC)
   2. Select all the Instance subnets
   3. Instance security groups select:
   * rds-launch-wizard 
-17. Do not configure the Database settings.
-18. Choose Create environment.
+16. Do not configure the Database settings.
+17. Choose Create environment.
 
 ### Configuring the DocumentRoot
 
